@@ -8,6 +8,8 @@ import { signInUi } from '@/firebase'
 import { firebase } from '@/firebase'
 import router from '../router'
 
+var db = firebase.firestore();
+
 export default {
   mounted: function () {
     var uiConfig = {
@@ -25,6 +27,7 @@ export default {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log('updating user')
+        // Store user in store
         this.$store.dispatch('updateUser', user)
         router.push({ path: 'home' })
       } else {
