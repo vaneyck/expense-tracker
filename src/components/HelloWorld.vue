@@ -1,20 +1,22 @@
 <template>
   <div class="main-content">
-    <section class="section">
+    <section class="section controls">
       <button class="button" @click="showAddExpenseModal">Add Expense</button>
     </section>
     <section class="section expenses">
-      <ul>
-        <li v-for="(expense, index) in expenses" :key="index">
-          <span>{{ expense.expenseName }}</span>
-          <span>{{ expense.expenseCost }}</span>
-        </li>
-      </ul>
+      <div class="columns is-mobile" v-for="(expense, index) in expenses" :key="index">
+        <div class="column">{{ expense.expenseName }}</div>
+        <div class="column">
+          <span class="is-pulled-right is-size-4 has-text-weight-bold">{{ formatAmount(expense.expenseCost) }}</span>
+        </div>
+      </div>
     </section>
   </div>
 </template>
 
 <script>
+import currencyFormatter from 'currency-formatter'
+
 import AddExpense from '@/components/AddExpense'
 import { firebase } from '@/firebase'
 var db = firebase.firestore();
@@ -49,6 +51,10 @@ export default {
         component: AddExpense,
         hasModalCard: true
       })
+    },
+    formatAmount: function (amount) {
+      // TODO Pull code from a user's defined currency
+      return currencyFormatter.format(amount, { code: '' })
     }
   },
   components: {
