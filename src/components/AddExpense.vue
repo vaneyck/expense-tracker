@@ -15,7 +15,7 @@
       <b-field label="Amount">
         <b-input
           type="number"
-          v-model="expenseCost"
+          v-model.number="expenseCost"
           placeholder="Cost"
           required>
         </b-input>

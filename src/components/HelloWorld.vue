@@ -3,8 +3,16 @@
     <section class="section controls">
       <button class="button" @click="showAddExpenseModal">Add Expense</button>
     </section>
+    <div class="level is-mobile">
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">Total Expense</p>
+          <p class="title">{{ formatAmount(totalExpense) }}</p>
+        </div>
+      </div>
+    </div>
     <section class="section expenses">
-      <div class="columns is-mobile" v-for="(expense, index) in expenses" :key="index">
+      <div class="columns is-mobile expense" v-for="(expense, index) in expenses" :key="index">
         <div class="column">{{ expense.expenseName }}</div>
         <div class="column">
           <span class="is-pulled-right is-size-4 has-text-weight-bold">{{ formatAmount(expense.expenseCost) }}</span>
@@ -25,7 +33,6 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      isAddExpenseModalActive: false,
       expenses: []
     }
   },
@@ -42,6 +49,15 @@ export default {
   computed: {
     currentUser: function () {
       return this.$store.getters.getUser
+    },
+    totalExpense: function () {
+      if (this.expenses.length == 0) {
+        return 0
+      } else {
+        return this.expenses.map( x=> x.expenseCost).reduce((total, expenseCost) => {
+          return total + expenseCost
+        });
+      }
     }
   },
   methods: {
