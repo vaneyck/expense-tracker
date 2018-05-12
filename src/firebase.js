@@ -1,7 +1,15 @@
 import firebaseAPI from 'firebase'
 import firebaseUi from 'firebaseui'
 require('firebase/firestore')
-import { config } from '@/firebase-config'
+
+var config = {
+  apiKey: "AIzaSyC6c2gfMTNF-1gEbnXh8CvnXx8HTl7Deps",
+  authDomain: "expense-tracker-ac6d8.firebaseapp.com",
+  databaseURL: "https://expense-tracker-ac6d8.firebaseio.com",
+  projectId: "expense-tracker-ac6d8",
+  storageBucket: "expense-tracker-ac6d8.appspot.com",
+  messagingSenderId: "211067149885"
+};
 
 // Initiailize the firebase App
 firebaseAPI.initializeApp(config)
