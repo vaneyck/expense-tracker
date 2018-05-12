@@ -57,10 +57,16 @@ export default {
         expenseCost: this.expenseCost,
         dateCreated: new Date()
       })
-      .then(function(documentReference) {
+      .then((documentReference) => {
         console.log("Successfull added expense")
+        this.$toast.open({
+          message: 'Your expense has been recorded',
+          type: 'is-success',
+          duration: 3000,
+          position: 'is-bottom'
+        })
       })
-      .catch(function(error){
+      .catch((error) => {
         console.log('Error adding expense : ' + error)
       })
       this.$parent.close()
