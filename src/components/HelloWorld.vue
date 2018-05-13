@@ -81,4 +81,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.expense {
+  border-bottom: 1px solid #c2c2c2;
+}
 </style>
