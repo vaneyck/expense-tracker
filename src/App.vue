@@ -16,6 +16,12 @@
           <div class="navbar-item" v-if="currentUser">
             <a href="#" v-on:click="signOut">Sign Out</a>
           </div>
+          <div class="navbar-item" v-if="currentUser">
+            <span class="display-name">{{ currentUser.displayName }}</span>
+            <figure class="image is-24x24">
+              <img :src="currentUser.photoURL"></img>
+            </figure>
+          </div>
         </div>
       </div>
     </nav>
@@ -58,5 +64,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.display-name {
+  margin-right: 16px;
+}
 </style>
