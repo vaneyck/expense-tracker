@@ -4,21 +4,6 @@
 
 ## Build Setup
 
-Add Firebase Config in a file named firebase-config.js. In the form
-
-```
-const firebaseConfig = {
-  apiKey: "####",
-  authDomain: "####",
-  databaseURL: "####",
-  projectId: "####",
-  storageBucket: "####",
-  messagingSenderId: "####"
-};
-
-export const config = firebaseConfig
-```
-
 ``` bash
 # install dependencies
 npm install
