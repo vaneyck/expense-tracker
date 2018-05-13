@@ -5,8 +5,17 @@
         <a class="navbar-item" href="#">
           <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
         </a>
-        <div class="navbar-item">
-          <a v-if="currentUser" href="#" v-on:click="signOut">Sign Out</a>
+        <div class="navbar-burger burger" v-bind:class="{ 'is-active': mobileMenuActive }" @click="toggleMobileMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <div class="navbar-menu" v-bind:class="{ 'is-active': mobileMenuActive }">
+        <div class="navbar-end">
+          <div class="navbar-item" v-if="currentUser">
+            <a href="#" v-on:click="signOut">Sign Out</a>
+          </div>
         </div>
       </div>
     </nav>
@@ -24,6 +33,11 @@ Vue.use(Buefy)
 
 export default {
   name: 'App',
+  data () {
+    return {
+      mobileMenuActive: false
+    }
+  },
   computed: {
     currentUser: function () {
       return this.$store.getters.getUser
@@ -36,6 +50,9 @@ export default {
       }).catch((error) => {
         console.log('Failed Signed out' + error)
       })
+    },
+    toggleMobileMenu: function () {
+      this.mobileMenuActive = !this.mobileMenuActive
     }
   }
 }
