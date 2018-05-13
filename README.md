@@ -1,5 +1,7 @@
 # expense-tracker
 
+[![Build Status](https://travis-ci.org/vaneyck/expense-tracker.svg?branch=master)](https://travis-ci.org/vaneyck/expense-tracker)
+
 > Easily track your expenses (A Vue.js project)
 
 ## Build Setup
