@@ -18,6 +18,10 @@
           <span class="is-pulled-right is-size-4 has-text-weight-bold">{{ formatAmount(expense.expenseCost) }}</span>
         </div>
       </div>
+      <b-loading :active.sync="isLoadingExpenses" :canCancel="false"></b-loading>
+      <div v-if="(expenses.length == 0)" class="no-expenses">
+        <p class="heading has-text-centered">Record some expenses</p>
+      </div>
     </section>
   </div>
 </template>
@@ -33,7 +37,8 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
-      expenses: []
+      expenses: [],
+      isLoadingExpenses: true
     }
   },
   mounted: function () {
@@ -42,6 +47,7 @@ export default {
     db.collection(ref)
       .onSnapshot((doc) => {
         this.expenses = doc.docs.map( d => d.data())
+        this.isLoadingExpenses = false
     }, function(error){
       console.log(error)
     });
@@ -83,5 +89,6 @@ export default {
 <style scoped>
 .expense {
   border-bottom: 1px solid #c2c2c2;
+  cursor: pointer;
 }
 </style>
