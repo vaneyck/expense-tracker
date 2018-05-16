@@ -4,6 +4,9 @@
 
 > Easily track your expenses (A Vue.js project)
 
+## Progress and Plans
+See [Trello Board](https://trello.com/b/BDisEkHa/expense-tracker)
+
 ## Build Setup
 
 ``` bash
