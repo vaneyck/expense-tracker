@@ -25,6 +25,7 @@
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
       <button class="button is-primary" @click="saveExpense" :disabled="!isValidForm">Save</button>
+      <button v-if="expenseId" class="button is-danger" @click="deleteExpense">{{ deleteExpenseText }}</button>
     </footer>
   </div>
 </template>
@@ -40,6 +41,7 @@ export default {
   ],
   data () {
     return {
+      deletingExpense: false,
       editingExpense: false,
       expense: {
         expenseName: null,
@@ -77,9 +79,31 @@ export default {
     },
     isValidForm: function () {
       return (this.expense.expenseName != null && this.expense.expenseCost > 0)
+    },
+    deleteExpenseText: function () {
+      if (this.deletingExpense) {
+        return "Confirm Delete"
+      } else {
+        return "Delete"
+      }
     }
   },
   methods: {
+    deleteExpense: function () {
+      if (this.deletingExpense) {
+        let ref = `/users/${this.currentUser.uid}/expenses/`
+        db.collection(ref).doc(this.expenseId).delete()
+        .then(() => {
+          console.log("expense deleted")
+          this.$parent.close()
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+      } else {
+        this.deletingExpense = true
+      }
+    },
     saveExpense: function () {
       var dataToSave = {
         expenseName: this.expense.expenseName,
