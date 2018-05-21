@@ -12,7 +12,7 @@
       </div>
     </div>
     <section class="section expenses">
-      <div class="columns is-mobile expense" v-for="(expense, index) in expenses" :key="index">
+      <div class="columns is-mobile expense" @click="editExpense(expense.id)" v-for="(expense, index) in expenses" :key="index">
         <div class="column">{{ expense.expenseName }}</div>
         <div class="column">
           <span class="is-pulled-right is-size-4 has-text-weight-bold">{{ formatAmount(expense.expenseCost) }}</span>
@@ -46,7 +46,11 @@ export default {
     console.log(ref)
     db.collection(ref)
       .onSnapshot((doc) => {
-        this.expenses = doc.docs.map( d => d.data())
+        this.expenses = doc.docs.map( d => {
+          var data = d.data()
+          data.id = d.id
+          return data
+        })
         this.isLoadingExpenses = false
     }, function(error){
       console.log(error)
@@ -72,6 +76,16 @@ export default {
         parent: this,
         component: AddExpense,
         hasModalCard: true
+      })
+    },
+    editExpense: function (expenseId) {
+      this.$modal.open({
+        parent: this,
+        component: AddExpense,
+        hasModalCard: true,
+        props: {
+          expenseId: expenseId
+        }
       })
     },
     formatAmount: function (amount) {

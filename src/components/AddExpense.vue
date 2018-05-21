@@ -1,13 +1,14 @@
 <template>
   <div class="add-expense modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Add Expense</p>
+      <p v-if="expenseId" class="modal-card-title">Edit Expense</p>
+      <p v-else class="modal-card-title">Add Expense</p>
     </header>
     <section class="modal-card-body">
       <b-field label="Expense">
         <b-input
           type="text"
-          v-model="expenseItemName"
+          v-model="expense.expenseName"
           placeholder="Your Expense"
           required>
         </b-input>
@@ -15,7 +16,7 @@
       <b-field label="Amount">
         <b-input
           type="number"
-          v-model.number="expenseCost"
+          v-model.number="expense.expenseCost"
           placeholder="Cost"
           required>
         </b-input>
@@ -34,10 +35,40 @@ var db = firebase.firestore();
 
 export default {
   name: 'AddExpense',
+  props: [
+    'expenseId'
+  ],
   data () {
     return {
-      expenseItemName: null,
-      expenseCost: 0
+      editingExpense: false,
+      expense: {
+        expenseName: null,
+        expenseCost: 0,
+        dateCreated: new Date()
+      }
+    }
+  },
+  mounted () {
+    // retrieve the current expense
+    if (this.expenseId) {
+      let ref = `/users/${this.currentUser.uid}/expenses/${this.expenseId}`
+      db.doc(ref).get().then(doc => {
+        if (doc.exists) {
+          console.log('the document exists. available for editing')
+          this.editingExpense = true
+          let expenseData = doc.data()
+          this.expense.expenseName = expenseData.expenseName
+          this.expense.expenseCost = expenseData.expenseCost
+          this.expense.dateCreated = expenseData.dateCreated
+        } else {
+          console.log('no such document available')
+        }
+      })
+      .catch(error => {
+        console.log('error getting document : ' + error)
+      })
+    } else {
+      console.log("creating a new expense")
     }
   },
   computed: {
@@ -45,19 +76,17 @@ export default {
       return this.$store.getters.getUser
     },
     isValidForm: function () {
-      return (this.expenseItemName != null && this.expenseCost > 0)
+      return (this.expense.expenseName != null && this.expense.expenseCost > 0)
     }
   },
   methods: {
     saveExpense: function () {
-      let ref = `/users/${this.currentUser.uid}/expenses/`
-      console.log(ref)
-      db.collection(ref).add({
-        expenseName: this.expenseItemName,
-        expenseCost: this.expenseCost,
-        dateCreated: new Date()
-      })
-      .then((documentReference) => {
+      var dataToSave = {
+        expenseName: this.expense.expenseName,
+        expenseCost: this.expense.expenseCost,
+        dateCreated: this.expense.dateCreated
+      }
+      var saveSuccessFullHanlder = (documentReference) => {
         console.log("Successfull added expense")
         this.$toast.open({
           message: 'Your expense has been recorded',
@@ -65,10 +94,21 @@ export default {
           duration: 3000,
           position: 'is-bottom'
         })
-      })
-      .catch((error) => {
-        console.log('Error adding expense : ' + error)
-      })
+      }
+
+      if (this.expenseId) {
+        let ref = `/users/${this.currentUser.uid}/expenses/`
+        db.collection(ref).doc(this.expenseId).set(dataToSave)
+        .then(saveSuccessFullHanlder)
+      } else {
+        let ref = `/users/${this.currentUser.uid}/expenses/`
+        console.log(ref)
+        db.collection(ref).add(dataToSave)
+        .then(saveSuccessFullHanlder)
+        .catch((error) => {
+          console.log('Error adding expense : ' + error)
+        })
+      }
       this.$parent.close()
     }
   }
