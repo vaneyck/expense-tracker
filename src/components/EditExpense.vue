@@ -34,7 +34,7 @@ import { firebase } from '@/firebase'
 var db = firebase.firestore();
 
 export default {
-  name: 'AddExpense',
+  name: 'EditExpense',
   props: [
     'expenseId'
   ],

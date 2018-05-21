@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <section class="section controls">
-      <button class="button" @click="showAddExpenseModal">Add Expense</button>
+      <button class="button" @click="showEditExpenseModal">Add Expense</button>
     </section>
     <div class="level is-mobile">
       <div class="level-item has-text-centered">
@@ -29,12 +29,12 @@
 <script>
 import currencyFormatter from 'currency-formatter'
 
-import AddExpense from '@/components/AddExpense'
+import EditExpense from '@/components/EditExpense'
 import { firebase } from '@/firebase'
 var db = firebase.firestore();
 
 export default {
-  name: 'HelloWorld',
+  name: 'Home',
   data () {
     return {
       expenses: [],
@@ -71,17 +71,17 @@ export default {
     }
   },
   methods: {
-    showAddExpenseModal: function () {
+    showEditExpenseModal: function () {
       this.$modal.open({
         parent: this,
-        component: AddExpense,
+        component: EditExpense,
         hasModalCard: true
       })
     },
     editExpense: function (expenseId) {
       this.$modal.open({
         parent: this,
-        component: AddExpense,
+        component: EditExpense,
         hasModalCard: true,
         props: {
           expenseId: expenseId
@@ -94,7 +94,7 @@ export default {
     }
   },
   components: {
-    AddExpense
+    EditExpense
   }
 }
 </script>
