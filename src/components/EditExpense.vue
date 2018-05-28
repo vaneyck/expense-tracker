@@ -1,5 +1,5 @@
 <template>
-  <div class="add-expense modal-card">
+  <div class="edit-expense modal-card">
     <header class="modal-card-head">
       <p v-if="expenseId" class="modal-card-title">Edit Expense</p>
       <p v-else class="modal-card-title">Add Expense</p>
@@ -20,6 +20,13 @@
           placeholder="Cost"
           required>
         </b-input>
+      </b-field>
+      <b-field label="Select a date">
+        <b-datepicker
+            v-model="expense.dateCreated"
+            placeholder="Click to select..."
+            icon="calendar-today">
+        </b-datepicker>
       </b-field>
     </section>
     <footer class="modal-card-foot">
@@ -138,3 +145,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.modal .animation-content .modal-card {
+  overflow: visible !important;
+}
+
+.modal-card-body {
+  overflow: visible !important;
+}
+</style>
