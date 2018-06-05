@@ -13,7 +13,10 @@
     </div>
     <section class="section expenses">
       <div class="columns is-mobile expense" @click="editExpense(expense.id)" v-for="(expense, index) in expenses" :key="index">
-        <div class="column">{{ expense.expenseName }}</div>
+        <div class="column">
+          <div>{{ expense.expenseName }}</div>
+          <div>{{ formatDate(expense.dateCreated.seconds) }}</div>
+        </div>
         <div class="column">
           <span class="is-pulled-right is-size-4 has-text-weight-bold">{{ formatAmount(expense.expenseCost) }}</span>
         </div>
@@ -31,6 +34,7 @@ import currencyFormatter from 'currency-formatter'
 
 import EditExpense from '@/components/EditExpense'
 import { firebase } from '@/firebase'
+import moment from 'moment'
 var db = firebase.firestore();
 
 export default {
@@ -91,6 +95,9 @@ export default {
     formatAmount: function (amount) {
       // TODO Pull code from a user's defined currency
       return currencyFormatter.format(amount, { code: '' })
+    },
+    formatDate: function (seconds) {
+      return moment(new Date(seconds * 1000)).format("DD MMMM YYYY hh:mm a")
     }
   },
   components: {
