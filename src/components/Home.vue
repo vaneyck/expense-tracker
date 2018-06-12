@@ -3,6 +3,11 @@
     <section class="section controls">
       <button class="button" @click="showEditExpenseModal">Add Expense</button>
     </section>
+    <div class="contols">
+      <button @click="showPreviousMonthExpenses">Previous Month</button>
+      <button @click="showCurrentMonthExpenses">Current Month</button>
+      <button @click="showNextMonthExpenses">Next Month</button>
+    </div>
     <div class="level is-mobile">
       <div class="level-item has-text-centered">
         <div>
@@ -12,7 +17,7 @@
       </div>
     </div>
     <section class="section expenses">
-      <div class="columns is-mobile expense" @click="editExpense(expense.id)" v-for="(expense, index) in expenses" :key="index">
+      <div class="columns is-mobile expense" @click="editExpense(expense.id)" v-for="(expense, index) in selectedMonthExpenses" :key="index">
         <div class="column">
           <div>{{ expense.expenseName }}</div>
           <div>{{ formatDate(expense.dateCreated.seconds) }}</div>
@@ -41,13 +46,13 @@ export default {
   name: 'Home',
   data () {
     return {
+      monthToView: new Date(),
       expenses: [],
       isLoadingExpenses: true
     }
   },
   mounted: function () {
     let ref = `/users/${this.currentUser.uid}/expenses/`
-    console.log(ref)
     db.collection(ref)
       .onSnapshot((doc) => {
         this.expenses = doc.docs.map( d => {
@@ -61,14 +66,21 @@ export default {
     });
   },
   computed: {
+    selectedMonthExpenses: function () {
+      return this.expenses.filter(expense => {
+        let date1 = moment(new Date(expense.dateCreated.seconds * 1000)).format("MMMM YYYY")
+        let date2 = moment(this.monthToView).format("MMMM YYYY")
+        return (date1 == date2)
+      })
+    },
     currentUser: function () {
       return this.$store.getters.getUser
     },
     totalExpense: function () {
-      if (this.expenses.length == 0) {
+      if (this.selectedMonthExpenses.length == 0) {
         return 0
       } else {
-        return this.expenses.map( x=> x.expenseCost).reduce((total, expenseCost) => {
+        return this.selectedMonthExpenses.map( x=> x.expenseCost).reduce((total, expenseCost) => {
           return total + expenseCost
         });
       }
@@ -81,6 +93,17 @@ export default {
         component: EditExpense,
         hasModalCard: true
       })
+    },
+    showCurrentMonthExpenses: function () {
+      this.monthToView = new Date()
+    },
+    showPreviousMonthExpenses: function () {
+      let currentMonth = this.monthToView.getMonth()
+      this.monthToView = new Date(this.monthToView.setMonth(currentMonth - 1))
+    },
+    showNextMonthExpenses: function () {
+      let currentMonth = this.monthToView.getMonth()
+      this.monthToView = new Date(this.monthToView.setMonth(currentMonth + 1))
     },
     editExpense: function (expenseId) {
       this.$modal.open({
