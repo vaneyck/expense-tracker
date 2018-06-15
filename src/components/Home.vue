@@ -3,17 +3,23 @@
     <section class="section controls">
       <button class="button" @click="showEditExpenseModal">Add Expense</button>
     </section>
-    <div class="contols">
-      <button @click="showPreviousMonthExpenses">Previous Month</button>
-      <button @click="showCurrentMonthExpenses">Current Month</button>
-      <button @click="showNextMonthExpenses">Next Month</button>
-    </div>
     <div class="level is-mobile">
       <div class="level-item has-text-centered">
         <div>
           <p class="heading">Total Expense</p>
           <p class="title">{{ formatAmount(totalExpense) }}</p>
         </div>
+      </div>
+    </div>
+    <div class="contols columns">
+      <div class="column">
+        <button class="button is-info is-rounded" @click="showPreviousMonthExpenses">Previous Month</button>
+      </div>
+      <div class="column">
+        <button class="button is-info is-rounded" @click="showCurrentMonthExpenses">Current Month</button>
+      </div>
+      <div class="column">
+        <button class="button is-info is-rounded" @click="showNextMonthExpenses">Next Month</button>
       </div>
     </div>
     <section class="section expenses">
@@ -134,5 +140,9 @@ export default {
 .expense {
   border-bottom: 1px solid #c2c2c2;
   cursor: pointer;
+}
+
+.contols .column button {
+  width: 100%;
 }
 </style>
