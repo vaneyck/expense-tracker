@@ -74,7 +74,7 @@ export default {
   computed: {
     monthToView: function () {
       if (this.monthToViewParam) {
-        return moment(this.monthToViewParam, "MMMMYYYY")
+        return moment(this.monthToViewParam, "MMMMYYYY").toDate()
       } else {
         return new Date()
       }
