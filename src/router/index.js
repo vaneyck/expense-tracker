@@ -9,6 +9,12 @@ Vue.use(Router)
 const router = new Router({
   routes: [
     {
+      path: '/home/:monthToViewParam',
+      name: 'monthView',
+      component: Home,
+      props: true
+    },
+    {
       path: '/home',
       name: 'home',
       component: Home

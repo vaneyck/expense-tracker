@@ -50,9 +50,9 @@ var db = firebase.firestore();
 
 export default {
   name: 'Home',
+  props: ['monthToViewParam'],
   data () {
     return {
-      monthToView: new Date(),
       expenses: [],
       isLoadingExpenses: true
     }
@@ -72,6 +72,13 @@ export default {
     });
   },
   computed: {
+    monthToView: function () {
+      if (this.monthToViewParam) {
+        return moment(this.monthToViewParam, "MMMMYYYY")
+      } else {
+        return new Date()
+      }
+    },
     formatedMonthInView: function () {
       return moment(this.monthToView).format("MMMM YYYY")
     },
@@ -104,15 +111,18 @@ export default {
       })
     },
     showCurrentMonthExpenses: function () {
-      this.monthToView = new Date()
+      let monthToGo = moment(new Date()).format("MMMMYYYY")
+      this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
     },
     showPreviousMonthExpenses: function () {
       let currentMonth = this.monthToView.getMonth()
-      this.monthToView = new Date(this.monthToView.setMonth(currentMonth - 1))
+      let monthToGo = moment(new Date(this.monthToView.setMonth(currentMonth - 1))).format("MMMMYYYY")
+      this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
     },
     showNextMonthExpenses: function () {
       let currentMonth = this.monthToView.getMonth()
-      this.monthToView = new Date(this.monthToView.setMonth(currentMonth + 1))
+      let monthToGo = moment(new Date(this.monthToView.setMonth(currentMonth + 1))).format("MMMMYYYY")
+      this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
     },
     editExpense: function (expenseId) {
       this.$modal.open({
