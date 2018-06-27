@@ -6,7 +6,7 @@
     <div class="level is-mobile">
       <div class="level-item has-text-centered">
         <div>
-          <p class="heading">Total Expense</p>
+          <p class="heading">Total Expense for {{ formatedMonthInView }}</p>
           <p class="title">{{ formatAmount(totalExpense) }}</p>
         </div>
       </div>
@@ -72,6 +72,9 @@ export default {
     });
   },
   computed: {
+    formatedMonthInView: function () {
+      return moment(this.monthToView).format("MMMM YYYY")
+    },
     selectedMonthExpenses: function () {
       return this.expenses.filter(expense => {
         let date1 = moment(new Date(expense.dateCreated.seconds * 1000)).format("MMMM YYYY")
