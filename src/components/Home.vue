@@ -13,13 +13,13 @@
     </div>
     <div class="contols columns">
       <div class="column">
-        <button class="button is-info is-rounded" @click="showPreviousMonthExpenses">Previous Month</button>
+        <button class="button is-info is-rounded" @click="showPreviousMonthExpenses">{{ formattedPreviousMonth }}</button>
       </div>
       <div class="column">
         <button class="button is-info is-rounded" @click="showCurrentMonthExpenses">Current Month</button>
       </div>
       <div class="column">
-        <button class="button is-info is-rounded" @click="showNextMonthExpenses">Next Month</button>
+        <button class="button is-info is-rounded" @click="showNextMonthExpenses">{{ formattedNextMonth }}</button>
       </div>
     </div>
     <section class="section expenses">
@@ -46,6 +46,7 @@ import currencyFormatter from 'currency-formatter'
 import EditExpense from '@/components/EditExpense'
 import { firebase } from '@/firebase'
 import moment from 'moment'
+import _ from 'lodash'
 var db = firebase.firestore();
 
 export default {
@@ -82,6 +83,24 @@ export default {
     formatedMonthInView: function () {
       return moment(this.monthToView).format("MMMM YYYY")
     },
+    previousMonth: function () {
+      let currentDate = _.clone(this.monthToView)
+      let currentMonth = currentDate.getMonth()
+      let month = moment(new Date(currentDate.setMonth(currentMonth - 1)))
+      return month.toDate()
+    },
+    nextMonth: function () {
+      let currentDate = _.clone(this.monthToView)
+      let currentMonth = currentDate.getMonth()
+      let month = moment(new Date(currentDate.setMonth(currentMonth + 1)))
+      return month.toDate()
+    },
+    formattedPreviousMonth: function () {
+      return moment(this.previousMonth).format("MMMM YYYY")
+    },
+    formattedNextMonth: function () {
+      return moment(this.nextMonth).format("MMMM YYYY")
+    },
     selectedMonthExpenses: function () {
       return this.expenses.filter(expense => {
         let date1 = moment(new Date(expense.dateCreated.seconds * 1000)).format("MMMM YYYY")
@@ -115,14 +134,10 @@ export default {
       this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
     },
     showPreviousMonthExpenses: function () {
-      let currentMonth = this.monthToView.getMonth()
-      let monthToGo = moment(new Date(this.monthToView.setMonth(currentMonth - 1))).format("MMMMYYYY")
-      this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
+      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.previousMonth).format("MMMM YYYY") }})
     },
     showNextMonthExpenses: function () {
-      let currentMonth = this.monthToView.getMonth()
-      let monthToGo = moment(new Date(this.monthToView.setMonth(currentMonth + 1))).format("MMMMYYYY")
-      this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
+      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.nextMonth).format("MMMM YYYY") }})
     },
     editExpense: function (expenseId) {
       this.$modal.open({
