@@ -11,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div class="contols columns">
+    <div class="level contols columns is-mobile">
       <div class="column">
         <button class="button is-info is-rounded" @click="showPreviousMonthExpenses">{{ formattedPreviousMonth }}</button>
       </div>
@@ -134,10 +134,10 @@ export default {
       this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
     },
     showPreviousMonthExpenses: function () {
-      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.previousMonth).format("MMMM YYYY") }})
+      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.previousMonth).format("MMMMYYYY") }})
     },
     showNextMonthExpenses: function () {
-      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.nextMonth).format("MMMM YYYY") }})
+      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.nextMonth).format("MMMMYYYY") }})
     },
     editExpense: function (expenseId) {
       this.$modal.open({
