@@ -19,7 +19,7 @@
           <div class="navbar-item" v-if="currentUser">
             <span class="display-name">{{ currentUser.displayName }}</span>
             <figure class="image is-24x24">
-              <img :src="currentUser.photoURL"></img>
+              <img :src="currentUser.photoURL"/>
             </figure>
           </div>
         </div>
