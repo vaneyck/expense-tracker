@@ -25,7 +25,13 @@
         <b-datepicker
             v-model="expense.dateCreated"
             placeholder="Click to select..."
-            icon="calendar-today">
+            icon="calendar"
+            position="is-top-right">
+            <button class="button is-primary"
+                @click="date = new Date()">
+                <b-icon icon="calendar"></b-icon>
+                <span>Today</span>
+            </button>
         </b-datepicker>
       </b-field>
     </section>
@@ -68,7 +74,7 @@ export default {
           let expenseData = doc.data()
           this.expense.expenseName = expenseData.expenseName
           this.expense.expenseCost = expenseData.expenseCost
-          this.expense.dateCreated = expenseData.dateCreated
+          this.expense.dateCreated = new Date(expenseData.dateCreated.seconds * 1000)
         } else {
           console.log('no such document available')
         }

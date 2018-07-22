@@ -33,9 +33,12 @@
 import Vue from 'vue'
 import Buefy from 'buefy'
 import 'buefy/lib/buefy.css'
+import 'font-awesome/css/font-awesome.min.css'
 import { firebase } from '@/firebase'
 
-Vue.use(Buefy)
+Vue.use(Buefy, {
+  defaultIconPack: 'fa'
+})
 
 export default {
   name: 'App',
