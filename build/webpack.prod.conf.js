@@ -11,6 +11,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
+const WebpackPwaManifest = require('webpack-pwa-manifest')
 
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
@@ -35,6 +36,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
+    // cache webrequests via a service worker
     new SWPrecacheWebpackPlugin({
       cacheId: 'expense-tracker',
       filename: 'service-worker.js',
@@ -137,7 +139,24 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    // add support for the manifest.json
+    new WebpackPwaManifest({
+      name: 'Expense Tracker',
+      short_name: 'expense-tracker',
+      description: 'Track your expenses',
+      background_color: '#ffffff',
+      icons: [
+        {
+          src: path.resolve('src/assets/logo.png'),
+          sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+        },
+        // {
+        //   src: path.resolve('src/assets/large-icon.png'),
+        //   size: '1024x1024' // you can also use the specifications pattern
+        // }
+      ]
+    })
   ]
 })
 
