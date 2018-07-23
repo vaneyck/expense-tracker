@@ -142,6 +142,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     ]),
     // add support for the manifest.json
     new WebpackPwaManifest({
+      filename: 'manifest.json',
       name: 'Expense Tracker',
       short_name: 'expense-tracker',
       description: 'Track your expenses',
