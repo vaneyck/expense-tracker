@@ -1,5 +1,7 @@
 import firebaseAPI from 'firebase'
 import firebaseUi from 'firebaseui'
+import { store } from '@/store'
+import router from './router'
 require('firebase/firestore')
 
 var config = {
@@ -41,6 +43,17 @@ firestoreDatabase.enablePersistence()
       console.error("offline storage not supported")
     }
   });
+
+firebaseAPI.auth().onAuthStateChanged((user) => {
+  if (user) {
+    store.dispatch('updateUser', user)
+    router.push({ path: 'home' })
+  } else {
+    console.log('not updating user')
+    store.dispatch('updateUser', null)
+    router.push({ path: 'signin' })
+  }
+})
 
 export const firebase = firebaseAPI
 export const signInUi = ui
