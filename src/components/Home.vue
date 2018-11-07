@@ -174,6 +174,6 @@ export default {
 }
 
 .contols .column button {
-  width: 100%;
+  width: 90%;
 }
 </style>
