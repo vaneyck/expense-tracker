@@ -144,13 +144,13 @@ const webpackConfig = merge(baseWebpackConfig, {
     new WebpackPwaManifest({
       filename: 'manifest.json',
       name: 'Expense Tracker',
-      short_name: 'expense-tracker',
+      short_name: 'Expense Tracker',
       description: 'Track your expenses',
       background_color: '#ffffff',
       icons: [
         {
           src: path.resolve('src/assets/logo.png'),
-          sizes: [96, 128, 192, 256, 384, 512] // multiple sizes
+          sizes: [28, 96, 128, 192, 256, 384, 512] // multiple sizes
         },
         // {
         //   src: path.resolve('src/assets/large-icon.png'),
