@@ -1,8 +1,8 @@
 <template>
   <div class="main-content">
-    <section class="section controls">
-      <button class="button" @click="showEditExpenseModal">Add Expense</button>
-    </section>
+    <div class="fab" @click="showEditExpenseModal">
+      <i class="material-icons fab-icon">fullscreen_exit</i>
+    </div>
     <div class="level is-mobile">
       <div class="level-item has-text-centered">
         <div>
@@ -41,108 +41,125 @@
 </template>
 
 <script>
-import currencyFormatter from 'currency-formatter'
+import currencyFormatter from "currency-formatter";
 
-import EditExpense from '@/components/EditExpense'
-import { firebase } from '@/firebase'
-import moment from 'moment'
-import _ from 'lodash'
+import EditExpense from "@/components/EditExpense";
+import { firebase } from "@/firebase";
+import moment from "moment";
+import _ from "lodash";
 var db = firebase.firestore();
 
 export default {
-  name: 'Home',
-  props: ['monthToViewParam'],
-  data () {
+  name: "Home",
+  props: ["monthToViewParam"],
+  data() {
     return {
       expenses: [],
       isLoadingExpenses: true
-    }
+    };
   },
-  mounted: function () {
-    let ref = `/users/${this.currentUser.uid}/expenses/`
-    db.collection(ref)
-      .onSnapshot((doc) => {
-        this.expenses = doc.docs.map( d => {
-          var data = d.data()
-          data.id = d.id
-          return data
-        })
-        this.isLoadingExpenses = false
-    }, function(error){
-      console.log(error)
-    });
+  mounted: function() {
+    let ref = `/users/${this.currentUser.uid}/expenses/`;
+    db.collection(ref).onSnapshot(
+      doc => {
+        this.expenses = doc.docs.map(d => {
+          var data = d.data();
+          data.id = d.id;
+          return data;
+        });
+        this.isLoadingExpenses = false;
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
   },
   computed: {
-    monthToView: function () {
+    monthToView: function() {
       if (this.monthToViewParam) {
-        return moment(this.monthToViewParam, "MMMMYYYY").toDate()
+        return moment(this.monthToViewParam, "MMMMYYYY").toDate();
       } else {
-        return new Date()
+        return new Date();
       }
     },
-    formatedMonthInView: function () {
-      return moment(this.monthToView).format("MMMM YYYY")
+    formatedMonthInView: function() {
+      return moment(this.monthToView).format("MMMM YYYY");
     },
-    previousMonth: function () {
-      let currentDate = _.clone(this.monthToView)
-      let currentMonth = currentDate.getMonth()
-      let month = moment(new Date(currentDate.setMonth(currentMonth - 1)))
-      return month.toDate()
+    previousMonth: function() {
+      let currentDate = _.clone(this.monthToView);
+      let currentMonth = currentDate.getMonth();
+      let month = moment(new Date(currentDate.setMonth(currentMonth - 1)));
+      return month.toDate();
     },
-    nextMonth: function () {
-      let currentDate = _.clone(this.monthToView)
-      let currentMonth = currentDate.getMonth()
-      let month = moment(new Date(currentDate.setMonth(currentMonth + 1)))
-      return month.toDate()
+    nextMonth: function() {
+      let currentDate = _.clone(this.monthToView);
+      let currentMonth = currentDate.getMonth();
+      let month = moment(new Date(currentDate.setMonth(currentMonth + 1)));
+      return month.toDate();
     },
-    formattedPreviousMonth: function () {
-      return moment(this.previousMonth).format("MMMM YYYY")
+    formattedPreviousMonth: function() {
+      return moment(this.previousMonth).format("MMMM YYYY");
     },
-    formattedNextMonth: function () {
-      return moment(this.nextMonth).format("MMMM YYYY")
+    formattedNextMonth: function() {
+      return moment(this.nextMonth).format("MMMM YYYY");
     },
-    selectedMonthExpenses: function () {
+    selectedMonthExpenses: function() {
       let filteredExpenses = this.expenses.filter(expense => {
-        let date1 = moment(new Date(expense.dateCreated.seconds * 1000)).format("MMMM YYYY")
-        let date2 = moment(this.monthToView).format("MMMM YYYY")
-        return (date1 == date2)
-      })
-      return filteredExpenses.sort((a,b)=> {
-        return (b.dateCreated.seconds - a.dateCreated.seconds)
+        let date1 = moment(new Date(expense.dateCreated.seconds * 1000)).format(
+          "MMMM YYYY"
+        );
+        let date2 = moment(this.monthToView).format("MMMM YYYY");
+        return date1 == date2;
+      });
+      return filteredExpenses.sort((a, b) => {
+        return b.dateCreated.seconds - a.dateCreated.seconds;
       });
     },
-    currentUser: function () {
-      return this.$store.getters.getUser
+    currentUser: function() {
+      return this.$store.getters.getUser;
     },
-    totalExpense: function () {
+    totalExpense: function() {
       if (this.selectedMonthExpenses.length == 0) {
-        return 0
+        return 0;
       } else {
-        return this.selectedMonthExpenses.map( x=> x.expenseCost).reduce((total, expenseCost) => {
-          return total + expenseCost
-        });
+        return this.selectedMonthExpenses
+          .map(x => x.expenseCost)
+          .reduce((total, expenseCost) => {
+            return total + expenseCost;
+          });
       }
     }
   },
   methods: {
-    showEditExpenseModal: function () {
+    showEditExpenseModal: function() {
       this.$modal.open({
         parent: this,
         component: EditExpense,
         hasModalCard: true
-      })
+      });
     },
-    showCurrentMonthExpenses: function () {
-      let monthToGo = moment(new Date()).format("MMMMYYYY")
-      this.$router.push({ name: 'monthView', params: { monthToViewParam: monthToGo }})
+    showCurrentMonthExpenses: function() {
+      let monthToGo = moment(new Date()).format("MMMMYYYY");
+      this.$router.push({
+        name: "monthView",
+        params: { monthToViewParam: monthToGo }
+      });
     },
-    showPreviousMonthExpenses: function () {
-      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.previousMonth).format("MMMMYYYY") }})
+    showPreviousMonthExpenses: function() {
+      this.$router.push({
+        name: "monthView",
+        params: {
+          monthToViewParam: moment(this.previousMonth).format("MMMMYYYY")
+        }
+      });
     },
-    showNextMonthExpenses: function () {
-      this.$router.push({ name: 'monthView', params: { monthToViewParam: moment(this.nextMonth).format("MMMMYYYY") }})
+    showNextMonthExpenses: function() {
+      this.$router.push({
+        name: "monthView",
+        params: { monthToViewParam: moment(this.nextMonth).format("MMMMYYYY") }
+      });
     },
-    editExpense: function (expenseId) {
+    editExpense: function(expenseId) {
       this.$modal.open({
         parent: this,
         component: EditExpense,
@@ -150,20 +167,20 @@ export default {
         props: {
           expenseId: expenseId
         }
-      })
+      });
     },
-    formatAmount: function (amount) {
+    formatAmount: function(amount) {
       // TODO Pull code from a user's defined currency
-      return currencyFormatter.format(amount, { code: '' })
+      return currencyFormatter.format(amount, { code: "" });
     },
-    formatDate: function (seconds) {
-      return moment(new Date(seconds * 1000)).format("DD MMMM YYYY hh:mm a")
+    formatDate: function(seconds) {
+      return moment(new Date(seconds * 1000)).format("DD MMMM YYYY hh:mm a");
     }
   },
   components: {
     EditExpense
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -175,5 +192,25 @@ export default {
 
 .contols .column button {
   width: 90%;
+}
+
+.fab {
+  position: fixed;
+  width: 56px;
+  height: 56px;
+  right: 6%;
+  bottom: 15px;
+  border-radius: 50%;
+  background: #167df0;
+  cursor: pointer;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+
+.fab-icon {
+  color: white;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
