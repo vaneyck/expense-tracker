@@ -29,7 +29,7 @@ export default {
         console.log('updating user')
         // Store user in store
         this.$store.dispatch('updateUser', user)
-        router.push({ path: 'home' })
+        router.replace({ path: 'home' })
       } else {
         console.log('not updating user')
         this.$store.dispatch('updateUser', null)
