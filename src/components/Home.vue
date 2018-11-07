@@ -11,15 +11,15 @@
         </div>
       </div>
     </div>
-    <div class="level contols columns is-mobile">
+    <div class="level contols columns is-mobile is-gapless">
       <div class="column">
-        <button class="button is-info is-rounded" @click="showPreviousMonthExpenses">{{ formattedPreviousMonth }}</button>
+        <button class="button is-info" @click="showPreviousMonthExpenses">{{ formattedPreviousMonth }}</button>
       </div>
       <div class="column">
-        <button class="button is-info is-rounded" @click="showCurrentMonthExpenses">Current Month</button>
+        <button class="button is-info" @click="showCurrentMonthExpenses">Current Month</button>
       </div>
       <div class="column">
-        <button class="button is-info is-rounded" @click="showNextMonthExpenses">{{ formattedNextMonth }}</button>
+        <button class="button is-info" @click="showNextMonthExpenses">{{ formattedNextMonth }}</button>
       </div>
     </div>
     <section class="section expenses">
@@ -102,11 +102,14 @@ export default {
       return moment(this.nextMonth).format("MMMM YYYY")
     },
     selectedMonthExpenses: function () {
-      return this.expenses.filter(expense => {
+      let filteredExpenses = this.expenses.filter(expense => {
         let date1 = moment(new Date(expense.dateCreated.seconds * 1000)).format("MMMM YYYY")
         let date2 = moment(this.monthToView).format("MMMM YYYY")
         return (date1 == date2)
       })
+      return filteredExpenses.sort((a,b)=> {
+        return (b.dateCreated.seconds - a.dateCreated.seconds)
+      });
     },
     currentUser: function () {
       return this.$store.getters.getUser

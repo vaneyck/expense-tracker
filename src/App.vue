@@ -32,7 +32,7 @@
 <script>
 import Vue from 'vue'
 import Buefy from 'buefy'
-import 'buefy/lib/buefy.css'
+import 'buefy/dist/buefy.css';
 import 'font-awesome/css/font-awesome.min.css'
 import { firebase } from '@/firebase'
 
@@ -52,6 +52,9 @@ export default {
       return this.$store.getters.getUser
     }
   },
+  mounted: function () {
+    this.determineBrowserDimensions();
+  },
   methods: {
     signOut: function () {
       firebase.auth().signOut().then(() => {
@@ -62,7 +65,19 @@ export default {
     },
     toggleMobileMenu: function () {
       this.mobileMenuActive = !this.mobileMenuActive
-    }
+    },
+    determineBrowserDimensions: function () {
+      //> HEIGHT
+      let vh = window.innerHeight * 0.01;
+      // Then we set the value in the --vh custom property to the root of the document
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
+      // We listen to the resize event
+      window.addEventListener('resize', () => {
+          // We execute the same script as before
+          let vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+      });
+	  }
   }
 }
 </script>
@@ -70,5 +85,10 @@ export default {
 <style scoped>
 .display-name {
   margin-right: 16px;
+}
+
+#app {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
 }
 </style>

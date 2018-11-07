@@ -14,7 +14,7 @@
     "deploy": "node build/build.js && firebase deploy"
   },
   "dependencies": {
-    "buefy": "^0.6.6",
+    "buefy": "^0.7.0",
     "currency-formatter": "^1.4.2",
     "firebase": "^4.12.1",
     "firebaseui": "^2.4.1",
