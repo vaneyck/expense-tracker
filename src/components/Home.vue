@@ -13,13 +13,17 @@
     </div>
     <div class="level contols columns is-mobile is-gapless">
       <div class="column has-text-centered">
-        <button class="button is-info" @click="showPreviousMonthExpenses">{{ formattedPreviousMonth }}</button>
+        <button class="button is-info" @click="showPreviousMonthExpenses" :title="formattedPreviousMonth">
+          <i class="material-icons">chevron_left</i>
+        </button>
       </div>
       <div class="column has-text-centered">
         <button class="button is-info" @click="showCurrentMonthExpenses">Current Month</button>
       </div>
       <div class="column has-text-centered">
-        <button class="button is-info" @click="showNextMonthExpenses">{{ formattedNextMonth }}</button>
+        <button class="button is-info" @click="showNextMonthExpenses" :title="formattedNextMonth">
+          <i class="material-icons">chevron_right</i>
+        </button>
       </div>
     </div>
     <section class="section expenses">
