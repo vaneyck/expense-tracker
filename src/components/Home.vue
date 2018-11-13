@@ -26,7 +26,13 @@
         </button>
       </div>
     </div>
-    <section class="section expenses">
+    <div class="tabs is-centered">
+      <ul>
+        <li :class="{ 'is-active' : listActive }" @click="showListTab"><a>List</a></li>
+        <li :class="{ 'is-active' : statsActive }" @click="showStatsTab"><a>Stats</a></li>
+      </ul>
+    </div>
+    <section v-if="listActive" class="section expenses">
       <div class="columns is-mobile expense" @click="editExpense(expense.id)" v-for="(expense, index) in selectedMonthExpenses" :key="index">
         <div class="column">
           <div>{{ expense.expenseName }}</div>
@@ -37,9 +43,12 @@
         </div>
       </div>
       <b-loading :active.sync="isLoadingExpenses" :canCancel="false"></b-loading>
-      <div v-if="(expenses.length == 0)" class="no-expenses">
-        <p class="heading has-text-centered">Record some expenses</p>
+      <div v-if="(selectedMonthExpenses.length == 0)" class="no-expenses">
+        <p class="heading has-text-centered">Record some expenses for {{ formatedMonthInView }}</p>
       </div>
+    </section>
+    <section v-if="statsActive" class="section stats">
+      <div class="has-text-centered">Stats for {{ formatedMonthInView }}</div>
     </section>
   </div>
 </template>
@@ -59,7 +68,9 @@ export default {
   data() {
     return {
       expenses: [],
-      isLoadingExpenses: true
+      isLoadingExpenses: true,
+      listActive: true,
+      statsActive: false
     };
   },
   mounted: function() {
@@ -179,6 +190,14 @@ export default {
     },
     formatDate: function(seconds) {
       return moment(new Date(seconds * 1000)).format("DD MMMM YYYY hh:mm a");
+    },
+    showStatsTab: function () {
+      this.listActive = false;
+      this.statsActive = true;
+    },
+    showListTab: function () {
+      this.listActive = true;
+      this.statsActive = false;
     }
   },
   components: {
