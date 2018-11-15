@@ -36,7 +36,7 @@
       <div class="columns is-mobile expense" @click="editExpense(expense.id)" v-for="(expense, index) in selectedMonthExpenses" :key="index">
         <div class="column">
           <div>{{ expense.expenseName }}</div>
-          <div>{{ formatDate(expense.dateCreated.seconds) }}</div>
+          <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
         </div>
         <div class="column">
           <span class="is-pulled-right is-size-4 has-text-weight-bold">{{ formatAmount(expense.expenseCost) }}</span>
@@ -49,6 +49,7 @@
     </section>
     <section v-if="statsActive" class="section stats">
       <div class="has-text-centered">Stats for {{ formatedMonthInView }}</div>
+      <line-chart :chart-data="chartData" :options="chartOptions"/>
     </section>
   </div>
 </template>
@@ -57,6 +58,7 @@
 import currencyFormatter from "currency-formatter";
 
 import EditExpense from "@/components/EditExpense";
+import LineChart from '@/components/LineChart';
 import { firebase } from "@/firebase";
 import moment from "moment";
 import _ from "lodash";
@@ -143,6 +145,23 @@ export default {
             return total + expenseCost;
           });
       }
+    },
+    chartData: function () {
+      //this.selectedMonthExpenses
+
+      return {
+        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        datasets: [{
+          label: this.formatedMonthInView,
+          data: [12, 19, 3, 5, 2, 3]
+        }]
+      }
+    },
+    chartOptions: function () {
+      return {
+        responsive: true,
+        maintainAspectRatio: false
+      };
     }
   },
   methods: {
@@ -201,7 +220,7 @@ export default {
     }
   },
   components: {
-    EditExpense
+    EditExpense, LineChart
   }
 };
 </script>
@@ -211,6 +230,10 @@ export default {
 .expense {
   border-bottom: 1px solid #c2c2c2;
   cursor: pointer;
+}
+
+.expense-date {
+  font-size: 0.8em;
 }
 
 .contols .column button {
