@@ -150,10 +150,11 @@ export default {
       //this.selectedMonthExpenses
 
       return {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: ["1 Nov", "2 Nov", "3 Nov", "4 Nov", "5 Nov", "6 Nov", "7 Nov", "8 Nov", "9 Nov"],
         datasets: [{
           label: this.formatedMonthInView,
-          data: [12, 19, 3, 5, 2, 3]
+          lineTension: 0,
+          data: [3, 4, 5, 7, 12, 19]
         }]
       }
     },
