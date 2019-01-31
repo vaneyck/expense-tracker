@@ -1,0 +1,6 @@
+sonar-scanner \
+  -Dsonar.projectKey=vaneyck_expense-tracker \
+  -Dsonar.organization=vaneyck-github \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=https://sonarcloud.io \
+  -Dsonar.login=64e076106edade063c0436f6f2e0d345d1046e49
