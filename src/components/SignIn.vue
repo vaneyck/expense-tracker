@@ -26,13 +26,8 @@ export default {
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        console.log('updating user')
-        // Store user in store
-        this.$store.dispatch('updateUser', user)
         router.replace({ path: 'home' })
       } else {
-        console.log('not updating user')
-        this.$store.dispatch('updateUser', null)
         router.push({ path: 'signin' })
       }
     })
