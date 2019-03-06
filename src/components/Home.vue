@@ -163,7 +163,9 @@ export default {
         datasets: [{
           label: this.formatedMonthInView,
           lineTension: 0,
-          data: sumedByDayExpenses
+          data: sumedByDayExpenses,
+          borderColor: "#167df0",
+          backgroundColor: "#167df044"
         }]
       }
     },
