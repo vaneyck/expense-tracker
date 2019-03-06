@@ -147,21 +147,39 @@ export default {
       }
     },
     chartData: function () {
-      //this.selectedMonthExpenses
-
+      let groupedExpenses = _.groupBy(this.selectedMonthExpenses, (expense) => {
+        return moment(new Date(expense.dateCreated.seconds * 1000)).format("DD MMMM YYYY");
+      })
+      let orderedDatesAsString = Object.keys(groupedExpenses);
+      let orderedDates = _.map(orderedDatesAsString, (dateAsString) => {
+        return moment(dateAsString, "DD MMMM YYYY").toDate();
+      })
+      let sumedByDayExpenses = _.map(orderedDates, (date) => {
+        let expensesForDay = groupedExpenses[moment(date).format("DD MMMM YYYY")]
+        return _.sum(_.map(expensesForDay, (expense) => { return expense.expenseCost }))
+      })
       return {
-        labels: ["1 Nov", "2 Nov", "3 Nov", "4 Nov", "5 Nov", "6 Nov", "7 Nov", "8 Nov", "9 Nov"],
+        labels: orderedDates,
         datasets: [{
           label: this.formatedMonthInView,
           lineTension: 0,
-          data: [3, 4, 5, 7, 12, 19]
+          data: sumedByDayExpenses
         }]
       }
     },
     chartOptions: function () {
       return {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{
+            type: 'time',
+						distribution: 'series',
+						ticks: {
+						  source: 'labels'
+						}
+          }]
+        }
       };
     }
   },
