@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     signOut: function() {
-      this.$store.dispatch('updateUser', null)
+      this.$store.dispatch("updateUser", null);
       firebase
         .auth()
         .signOut()

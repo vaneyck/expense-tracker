@@ -25,10 +25,10 @@ const settings = {
 firestoreDatabase.settings(settings)
 
 firestoreDatabase.enablePersistence()
-  .then(function() {
+  .then(function () {
     console.log("Persistence Enabled")
   })
-  .catch(function(err) {
+  .catch(function (err) {
     if (err.code == 'failed-precondition') {
       // Multiple tabs open, persistence can only be enabled
       // in one tab at a a time.

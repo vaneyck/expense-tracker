@@ -11,7 +11,7 @@ export const store = new Vuex.Store({
    * Use to access the data store. Never access the data directly
    */
   getters: {
-    getUser (state) {
+    getUser(state) {
       return state.user
     }
   },
@@ -19,7 +19,7 @@ export const store = new Vuex.Store({
    * Has to be synchronous code
    */
   mutations: {
-    updateUser (state, userLoginData) {
+    updateUser(state, userLoginData) {
       state.user = userLoginData
     }
   },
@@ -27,7 +27,7 @@ export const store = new Vuex.Store({
    * Can run aysynchronous code before calling mutation
    */
   actions: {
-    updateUser (context, userLoginData) {
+    updateUser(context, userLoginData) {
       context.commit('updateUser', userLoginData)
     }
   }

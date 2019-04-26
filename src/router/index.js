@@ -52,7 +52,7 @@ router.beforeEach(async function (to, from, next) {
     try {
       console.log("ROUTER:", new Date(), "getting user")
       let user = await getUser();
-      console.log("ROUTER:",new Date(), "got user")
+      console.log("ROUTER:", new Date(), "got user")
       // check if the user is logged in
       console.log("ROUTER: user is logged in", user)
       console.log("ROUTER: going to requested page", to.name)
