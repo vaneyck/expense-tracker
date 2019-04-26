@@ -13,7 +13,11 @@
     </div>
     <div class="level contols columns is-mobile is-gapless">
       <div class="column has-text-centered">
-        <button class="button is-info" @click="showPreviousMonthExpenses" :title="formattedPreviousMonth">
+        <button
+          class="button is-info"
+          @click="showPreviousMonthExpenses"
+          :title="formattedPreviousMonth"
+        >
           <i class="material-icons">chevron_left</i>
         </button>
       </div>
@@ -28,18 +32,29 @@
     </div>
     <div class="tabs is-centered">
       <ul>
-        <li :class="{ 'is-active' : listActive }" @click="showListTab"><a>List</a></li>
-        <li :class="{ 'is-active' : statsActive }" @click="showStatsTab"><a>Stats</a></li>
+        <li :class="{ 'is-active' : listActive }" @click="showListTab">
+          <a>List</a>
+        </li>
+        <li :class="{ 'is-active' : statsActive }" @click="showStatsTab">
+          <a>Stats</a>
+        </li>
       </ul>
     </div>
     <section v-if="listActive" class="section expenses">
-      <div class="columns is-mobile expense" @click="editExpense(expense.id)" v-for="(expense, index) in selectedMonthExpenses" :key="index">
+      <div
+        class="columns is-mobile expense"
+        @click="editExpense(expense.id)"
+        v-for="(expense, index) in selectedMonthExpenses"
+        :key="index"
+      >
         <div class="column">
           <div>{{ expense.expenseName }}</div>
           <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
         </div>
         <div class="column">
-          <span class="is-pulled-right is-size-4 has-text-weight-bold">{{ formatAmount(expense.expenseCost) }}</span>
+          <span
+            class="is-pulled-right is-size-4 has-text-weight-bold"
+          >{{ formatAmount(expense.expenseCost) }}</span>
         </div>
       </div>
       <b-loading :active.sync="isLoadingExpenses" :canCancel="false"></b-loading>
@@ -58,7 +73,7 @@
 import currencyFormatter from "currency-formatter";
 
 import EditExpense from "@/components/EditExpense";
-import LineChart from '@/components/LineChart';
+import LineChart from "@/components/LineChart";
 import { firebase } from "@/firebase";
 import moment from "moment";
 import _ from "lodash";
@@ -146,41 +161,52 @@ export default {
           });
       }
     },
-    chartData: function () {
-      let groupedExpenses = _.groupBy(this.selectedMonthExpenses, (expense) => {
-        return moment(new Date(expense.dateCreated.seconds * 1000)).format("DD MMMM YYYY");
-      })
+    chartData: function() {
+      let groupedExpenses = _.groupBy(this.selectedMonthExpenses, expense => {
+        return moment(new Date(expense.dateCreated.seconds * 1000)).format(
+          "DD MMMM YYYY"
+        );
+      });
       let orderedDatesAsString = Object.keys(groupedExpenses);
-      let orderedDates = _.map(orderedDatesAsString, (dateAsString) => {
+      let orderedDates = _.map(orderedDatesAsString, dateAsString => {
         return moment(dateAsString, "DD MMMM YYYY").toDate();
-      })
-      let sumedByDayExpenses = _.map(orderedDates, (date) => {
-        let expensesForDay = groupedExpenses[moment(date).format("DD MMMM YYYY")]
-        return _.sum(_.map(expensesForDay, (expense) => { return expense.expenseCost }))
-      })
+      });
+      let sumedByDayExpenses = _.map(orderedDates, date => {
+        let expensesForDay =
+          groupedExpenses[moment(date).format("DD MMMM YYYY")];
+        return _.sum(
+          _.map(expensesForDay, expense => {
+            return expense.expenseCost;
+          })
+        );
+      });
       return {
         labels: orderedDates,
-        datasets: [{
-          label: this.formatedMonthInView,
-          lineTension: 0,
-          data: sumedByDayExpenses,
-          borderColor: "#167df0",
-          backgroundColor: "#167df044"
-        }]
-      }
+        datasets: [
+          {
+            label: this.formatedMonthInView,
+            lineTension: 0,
+            data: sumedByDayExpenses,
+            borderColor: "#167df0",
+            backgroundColor: "#167df044"
+          }
+        ]
+      };
     },
-    chartOptions: function () {
+    chartOptions: function() {
       return {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          xAxes: [{
-            type: 'time',
-						distribution: 'series',
-						ticks: {
-						  source: 'labels'
-						}
-          }]
+          xAxes: [
+            {
+              type: "time",
+              distribution: "series",
+              ticks: {
+                source: "labels"
+              }
+            }
+          ]
         }
       };
     }
@@ -231,17 +257,18 @@ export default {
     formatDate: function(seconds) {
       return moment(new Date(seconds * 1000)).format("DD MMMM YYYY hh:mm a");
     },
-    showStatsTab: function () {
+    showStatsTab: function() {
       this.listActive = false;
       this.statsActive = true;
     },
-    showListTab: function () {
+    showListTab: function() {
       this.listActive = true;
       this.statsActive = false;
     }
   },
   components: {
-    EditExpense, LineChart
+    // EditExpense,
+    LineChart
   }
 };
 </script>
@@ -270,7 +297,8 @@ export default {
   border-radius: 50%;
   background: #167df0;
   cursor: pointer;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
 }
 
 .fab-icon {

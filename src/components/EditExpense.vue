@@ -123,7 +123,7 @@ export default {
         expenseCost: this.expense.expenseCost,
         dateCreated: this.expense.dateCreated
       }
-      var saveSuccessFullHanlder = (documentReference) => {
+      var saveSuccessFullHanlder = () => {
         console.log("Successfull added expense")
         this.$toast.open({
           message: 'Your expense has been recorded',

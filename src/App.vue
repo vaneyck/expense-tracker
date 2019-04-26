@@ -2,10 +2,12 @@
   <div id="app" class="container">
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="#">
-          Expense Tracker
-        </a>
-        <div class="navbar-burger burger" v-bind:class="{ 'is-active': mobileMenuActive }" @click="toggleMobileMenu">
+        <a class="navbar-item" href="#">Expense Tracker</a>
+        <div
+          class="navbar-burger burger"
+          v-bind:class="{ 'is-active': mobileMenuActive }"
+          @click="toggleMobileMenu"
+        >
           <span></span>
           <span></span>
           <span></span>
@@ -19,7 +21,7 @@
           <div class="navbar-item" v-if="currentUser">
             <span class="display-name">{{ currentUser.displayName }}</span>
             <figure class="image is-24x24">
-              <img :src="currentUser.photoURL"/>
+              <img :src="currentUser.photoURL">
             </figure>
           </div>
         </div>
@@ -30,56 +32,61 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import Buefy from 'buefy'
-import 'buefy/dist/buefy.css';
-import 'font-awesome/css/font-awesome.min.css'
-import { firebase } from '@/firebase'
+import Vue from "vue";
+import Buefy from "buefy";
+import "buefy/dist/buefy.css";
+import "font-awesome/css/font-awesome.min.css";
+import { firebase } from "@/firebase";
 
 Vue.use(Buefy, {
-  defaultIconPack: 'fa'
-})
+  defaultIconPack: "fa"
+});
 
 export default {
-  name: 'App',
-  data () {
+  name: "App",
+  data() {
     return {
       mobileMenuActive: false
-    }
+    };
   },
   computed: {
-    currentUser: function () {
-      return this.$store.getters.getUser
+    currentUser: function() {
+      return this.$store.getters.getUser;
     }
   },
-  mounted: function () {
+  mounted: function() {
     this.determineBrowserDimensions();
   },
   methods: {
-    signOut: function () {
-      firebase.auth().signOut().then(() => {
-        this.$router.push({ name: 'signin' })
-      }).catch((error) => {
-        console.log('Failed Signed out' + error)
-      })
+    signOut: function() {
+      this.$store.dispatch('updateUser', null)
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.push({ name: "signin" });
+        })
+        .catch(error => {
+          console.log("Failed Signed out" + error);
+        });
     },
-    toggleMobileMenu: function () {
-      this.mobileMenuActive = !this.mobileMenuActive
+    toggleMobileMenu: function() {
+      this.mobileMenuActive = !this.mobileMenuActive;
     },
-    determineBrowserDimensions: function () {
+    determineBrowserDimensions: function() {
       //> HEIGHT
       let vh = window.innerHeight * 0.01;
       // Then we set the value in the --vh custom property to the root of the document
-      document.documentElement.style.setProperty('--vh', `${vh}px`)
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
       // We listen to the resize event
-      window.addEventListener('resize', () => {
-          // We execute the same script as before
-          let vh = window.innerHeight * 0.01;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
+      window.addEventListener("resize", () => {
+        // We execute the same script as before
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty("--vh", `${vh}px`);
       });
-	  }
+    }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -88,7 +95,7 @@ export default {
 }
 
 #app {
-    height: 100vh;
-    height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 }
 </style>

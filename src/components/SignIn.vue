@@ -8,10 +8,9 @@ import { signInUi } from '@/firebase'
 import { firebase } from '@/firebase'
 import router from '../router'
 
-var db = firebase.firestore();
-
 export default {
   mounted: function () {
+    console.log("Mounted SignIn Page")
     var uiConfig = {
       // TODO Find out how to generate links
       signInSuccessUrl: '/#/',
