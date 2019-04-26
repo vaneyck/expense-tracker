@@ -11,7 +11,7 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "register-service-worker": "^1.6.2",
-    "buefy": "^0.7.0",
+    "buefy": "^0.7.5",
     "chart.js": "^2.7.3",
     "currency-formatter": "^1.4.2",
     "firebase": "^4.12.1",

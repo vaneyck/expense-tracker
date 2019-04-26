@@ -11,7 +11,7 @@
       <b-field label="Amount">
         <b-input type="number" v-model.number="expense.expenseCost" placeholder="Cost" required></b-input>
       </b-field>
-      <b-field label="Select a date">
+      <b-field v-if="expense.dateCreated" label="Select a date">
         <b-datepicker
           v-model="expense.dateCreated"
           placeholder="Click to select..."
@@ -51,7 +51,7 @@ export default {
       expense: {
         expenseName: null,
         expenseCost: 0,
-        dateCreated: new Date()
+        dateCreated: null
       }
     };
   },
@@ -63,7 +63,7 @@ export default {
         .get()
         .then(doc => {
           if (doc.exists) {
-            console.log("the document exists. available for editing");
+            console.log("Document exists and available for editing");
             this.editingExpense = true;
             let expenseData = doc.data();
             this.expense.expenseName = expenseData.expenseName;
@@ -80,6 +80,7 @@ export default {
         });
     } else {
       console.log("creating a new expense");
+      this.expense.dateCreated = new Date();
     }
   },
   computed: {

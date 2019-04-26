@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <div class="fab" @click="showEditExpenseModal">
-      <i class="material-icons fab-icon">fullscreen_exit</i>
+      <i class="material-icons fab-icon">add</i>
     </div>
     <div class="level is-mobile">
       <div class="level-item has-text-centered">
