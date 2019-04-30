@@ -1,6 +1,6 @@
 {
-  "name": "expense-tracker",
-  "short_name": "expense-tracker",
+  "name": "Expense Tracker",
+  "short_name": "Expense Tracker",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
