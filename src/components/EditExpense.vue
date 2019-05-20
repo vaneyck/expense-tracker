@@ -11,6 +11,18 @@
       <b-field label="Amount">
         <b-input type="number" v-model.number="expense.expenseCost" placeholder="Cost" required></b-input>
       </b-field>
+      <b-field label="Categories (BETA)">
+        <b-taginput
+          v-model="this.expense.tags"
+          :data="filteredTags"
+          autocomplete
+          :allow-new="true"
+          field="tagName"
+          icon="tags"
+          placeholder="Add a tag"
+          @typing="getFilteredTags"
+        ></b-taginput>
+      </b-field>
       <b-field v-if="expense.dateCreated" label="Select a date">
         <b-datepicker
           v-model="expense.dateCreated"
@@ -46,12 +58,24 @@ export default {
   props: ["expenseId"],
   data() {
     return {
+      allTags: [
+        {
+          tagName: 'Food',
+          id: 1
+        },
+        {
+          tagName: 'Shopping',
+          id: 2
+        }
+      ],
+      filteredTags: [],
       deletingExpense: false,
       editingExpense: false,
       expense: {
         expenseName: null,
         expenseCost: 0,
-        dateCreated: null
+        dateCreated: null,
+        tags: []
       }
     };
   },
@@ -99,6 +123,16 @@ export default {
     }
   },
   methods: {
+    getFilteredTags: function(text) {
+      this.filteredTags = this.allTags.filter(option => {
+        return (
+          option.tagName
+            .toString()
+            .toLowerCase()
+            .indexOf(text.toLowerCase()) >= 0
+        );
+      });
+    },
     deleteExpense: function() {
       if (this.deletingExpense) {
         let ref = `/users/${this.currentUser.uid}/expenses/`;
