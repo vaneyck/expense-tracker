@@ -23,7 +23,7 @@
           @typing="getFilteredTags"
         ></b-taginput>
       </b-field>
-      <b-field v-if="expense.dateCreated" label="Select a date">
+      <b-field v-if="expense.dateCreated" label="Date">
         <b-datepicker
           v-model="expense.dateCreated"
           placeholder="Click to select..."
