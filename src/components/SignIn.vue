@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div id="landing-page">
     <div class="section">
-      <p class="is-size-1">Expense Tracker</p>
+      <img src="/img/icons/android-chrome-512x512.png"/>
+      <p class="is-size-1">Caesh</p>
     </div>
     <div id="signin"></div>
   </div>
@@ -39,5 +40,8 @@ export default {
 <style lang="scss" scoped>
 #signin {
   display: inline-block;
+}
+#landing-page {
+  text-align: center;
 }
 </style>

@@ -2,7 +2,10 @@
   <div id="app" class="container">
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="#">Expense Tracker</a>
+        <a class="navbar-item" href="#">
+          <img src="/img/icons/favicon-32x32.png"/>
+          <span>Caesh</span>
+        </a>
         <div
           class="navbar-burger burger"
           v-bind:class="{ 'is-active': mobileMenuActive }"

@@ -1,6 +1,6 @@
 module.exports = {
   pwa: {
-    name: 'Expense Tracker',
+    name: 'Caesh',
     msTileColor: '#FFFFFF'
   }
 }
