@@ -66,6 +66,7 @@
     <section v-if="statsActive" class="section stats">
       <div class="has-text-centered">Stats for {{ formatedMonthInView }}</div>
       <line-chart :chart-data="chartData" :options="chartOptions"/>
+      <CategoryTable :selectedMonthExpenses="selectedMonthExpenses" :formatedMonthInView="formatedMonthInView"></CategoryTable>
     </section>
   </div>
 </template>
@@ -74,6 +75,7 @@
 import currencyFormatter from "currency-formatter";
 
 import EditExpense from "@/components/EditExpense";
+import CategoryTable from "@/components/CategoryTable";
 import LineChart from "@/components/LineChart";
 import { firebase } from "@/firebase";
 import moment from "moment";
@@ -97,11 +99,13 @@ export default {
     let categoryRef = `/users/${this.currentUser.uid}/categories/`;
     db.collection(categoryRef).onSnapshot(
       doc => {
-        this.categories = doc.docs.map(d => {
+        let x = doc.docs.map(d => {
           var data = d.data();
           data.id = d.id;
           return data;
         });
+        this.categories = x;
+        this.$store.dispatch('updateCategories', x);
       },
       function(error) {
         console.log(error);
@@ -236,7 +240,6 @@ export default {
       } else {
         null
       }
-      
     },
     showEditExpenseModal: function() {
       this.$modal.open({
@@ -293,8 +296,8 @@ export default {
     }
   },
   components: {
-    // EditExpense,
-    LineChart
+    LineChart,
+    CategoryTable
   }
 };
 </script>
