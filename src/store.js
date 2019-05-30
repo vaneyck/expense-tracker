@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    user: null
+    user: null,
+    rawExpenses: {}
   },
   /**
    * Use to access the data store. Never access the data directly
@@ -13,7 +14,8 @@ export const store = new Vuex.Store({
   getters: {
     getUser(state) {
       return state.user
-    }
+    },
+    getRawExpenses(state) { return state.rawExpenses }
   },
   /**
    * Has to be synchronous code
@@ -21,6 +23,9 @@ export const store = new Vuex.Store({
   mutations: {
     updateUser(state, userLoginData) {
       state.user = userLoginData
+    },
+    updateRawExpenses (state, rawExpenseData) {
+      state.rawExpenses[rawExpenseData.month] = rawExpenseData.expenses
     }
   },
   /**
@@ -29,6 +34,9 @@ export const store = new Vuex.Store({
   actions: {
     updateUser(context, userLoginData) {
       context.commit('updateUser', userLoginData)
+    },
+    updateRawExpenses (context, rawExpenseData) {
+      context.commit('updateRawExpenses', rawExpenseData)
     }
   }
 })

@@ -84,29 +84,18 @@ export default {
   props: ["monthToViewParam"],
   data() {
     return {
-      expenses: [],
       isLoadingExpenses: true,
       listActive: true,
       statsActive: false
     };
   },
   mounted: function() {
-    let ref = `/users/${this.currentUser.uid}/expenses/`;
-    db.collection(ref).onSnapshot(
-      doc => {
-        this.expenses = doc.docs.map(d => {
-          var data = d.data();
-          data.id = d.id;
-          return data;
-        });
-        this.isLoadingExpenses = false;
-      },
-      function(error) {
-        console.log(error);
-      }
-    );
+    this.pullExpensesForSelectedMonth(null);
   },
   computed: {
+    rawExpenses: function() {
+      return this.$store.getters.getRawExpenses;
+    },
     monthToView: function() {
       if (this.monthToViewParam) {
         return moment(this.monthToViewParam, "MMMMYYYY").toDate();
@@ -136,16 +125,22 @@ export default {
       return moment(this.nextMonth).format("MMMM YYYY");
     },
     selectedMonthExpenses: function() {
-      let filteredExpenses = this.expenses.filter(expense => {
-        let date1 = moment(new Date(expense.dateCreated.seconds * 1000)).format(
-          "MMMM YYYY"
-        );
-        let date2 = moment(this.monthToView).format("MMMM YYYY");
-        return date1 == date2;
-      });
-      return filteredExpenses.sort((a, b) => {
-        return b.dateCreated.seconds - a.dateCreated.seconds;
-      });
+      let x
+      if (this.monthToViewParam) {
+        x = moment(this.monthToViewParam, "MMMMYYYY").toDate();
+      } else {
+        x = new Date();
+      }
+      console.log("Getting the months data");
+      let k = moment(x).format("MMMMYYYY");
+      let filteredExpenses = this.rawExpenses[k];
+      if (filteredExpenses) {
+        return filteredExpenses.sort((a, b) => {
+          return b.dateCreated.seconds - a.dateCreated.seconds;
+        });
+      } else {
+        return [];
+      }
     },
     currentUser: function() {
       return this.$store.getters.getUser;
@@ -212,6 +207,52 @@ export default {
     }
   },
   methods: {
+    pullExpensesForSelectedMonth: async function(monthToPullDataFor) {
+      console.log("Before");
+      if (!monthToPullDataFor) {
+        monthToPullDataFor = new Date();
+      }
+      this.isLoadingExpenses = true;
+      let monthAsString = moment(monthToPullDataFor).format("MMMMYYYY");
+      if (
+        this.rawExpenses[monthAsString] != null &&
+        this.rawExpenses[monthAsString].length > 0
+      ) {
+        console.log("Data already present for", monthToPullDataFor, " exiting");
+        this.isLoadingExpenses = false;
+        return;
+      }
+      let ref = `/users/${this.currentUser.uid}/expenses/`;
+      ref = db.collection(ref);
+      let lowerLimit = new Date(
+        moment(monthToPullDataFor.setDate(1)).format("YYYY-MM-DD")
+      );
+
+      // calculate the next month
+      let currentDate = _.clone(monthToPullDataFor);
+      let currentMonth = currentDate.getMonth();
+      let month = moment(new Date(currentDate.setMonth(currentMonth + 1)));
+      let nextMonth = month.toDate();
+
+      let upperLimit = new Date(
+        moment(nextMonth.setDate(1)).format("YYYY-MM-DD")
+      );
+      let query = ref
+        .where("dateCreated", ">=", lowerLimit)
+        .where("dateCreated", "<", upperLimit);
+      let snapshot = await query.get();
+      console.log("After");
+      let expenses = snapshot.docs.map(d => {
+        var data = d.data();
+        data.id = d.id;
+        return data;
+      });
+      this.$store.dispatch("updateRawExpenses", {
+        month: monthAsString,
+        expenses: expenses
+      });
+      this.isLoadingExpenses = false; 
+    },
     showEditExpenseModal: function() {
       this.$modal.open({
         parent: this,
@@ -269,6 +310,11 @@ export default {
   components: {
     // EditExpense,
     LineChart
+  },
+  watch: {
+    monthToViewParam: function (newValue) {
+      this.pullExpensesForSelectedMonth(this.monthToView);
+    }
   }
 };
 </script>

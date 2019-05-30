@@ -26,7 +26,7 @@ firestoreDatabase.settings(settings)
 
 firestoreDatabase.enablePersistence()
   .then(function () {
-    console.log("Persistence Enabled")
+    // console.log("Persistence Enabled")
   })
   .catch(function (err) {
     if (err.code == 'failed-precondition') {
