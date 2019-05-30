@@ -1,15 +1,22 @@
 <template>
   <tr>
     <td>{{ categoryName }}</td>
-    <td class="is-size-4 has-text-weight-bold">{{ totalPerCategory }}</td>
+    <td class="is-size-4 has-text-weight-bold">{{ formatAmount(totalPerCategory) }}</td>
   </tr>
 </template>
 
 <script>
 import _ from "lodash";
+import currencyFormatter from "currency-formatter";
 
 export default {
   props: ["categoryId", "categoryData"],
+  methods: {
+    formatAmount: function(amount) {
+      // TODO Pull code from a user's defined currency
+      return currencyFormatter.format(amount, { code: "" });
+    }
+  },
   computed: {
     categories: function() {
       return this.$store.getters.getCategories;
