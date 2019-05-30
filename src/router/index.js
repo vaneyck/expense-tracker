@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import SignIn from '@/components/SignIn'
+import Settings from '@/components/Settings'
 import { store } from '@/store'
 import { firebase } from '@/firebase'
 
@@ -13,6 +14,12 @@ const router = new Router({
       path: '/home/:monthToViewParam',
       name: 'monthView',
       component: Home,
+      props: true
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings,
       props: true
     },
     {

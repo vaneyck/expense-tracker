@@ -50,6 +50,7 @@
         <div class="column">
           <div>{{ expense.expenseName }}</div>
           <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
+          <div class="is-size-7" >{{ retrieveCategory(expense.categoryId) }}</div>
         </div>
         <div class="column">
           <span
@@ -84,6 +85,7 @@ export default {
   props: ["monthToViewParam"],
   data() {
     return {
+      categories: [],
       expenses: [],
       isLoadingExpenses: true,
       listActive: true,
@@ -91,6 +93,21 @@ export default {
     };
   },
   mounted: function() {
+    // pull categories
+    let categoryRef = `/users/${this.currentUser.uid}/categories/`;
+    db.collection(categoryRef).onSnapshot(
+      doc => {
+        this.categories = doc.docs.map(d => {
+          var data = d.data();
+          data.id = d.id;
+          return data;
+        });
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
+
     let ref = `/users/${this.currentUser.uid}/expenses/`;
     db.collection(ref).onSnapshot(
       doc => {
@@ -212,6 +229,15 @@ export default {
     }
   },
   methods: {
+    retrieveCategory: function (categoryId) {
+      let category = this.categories.find( category => { return  category.id == categoryId } );
+      if (category) {
+        return category.name
+      } else {
+        null
+      }
+      
+    },
     showEditExpenseModal: function() {
       this.$modal.open({
         parent: this,
