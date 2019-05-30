@@ -44,8 +44,8 @@
       <div
         class="columns is-mobile expense"
         @click="editExpense(expense.id)"
-        v-for="(expense, index) in selectedMonthExpenses"
-        :key="index"
+        v-for="expense in selectedMonthExpenses"
+        :key="expense.id"
       >
         <div class="column">
           <div>{{ expense.expenseName }}</div>
@@ -88,7 +88,7 @@ export default {
   data() {
     return {
       categories: [],
-      expenses: [],
+      selectedMonthExpenses: [],
       isLoadingExpenses: true,
       listActive: true,
       statsActive: false
@@ -145,24 +145,6 @@ export default {
     },
     formattedNextMonth: function() {
       return moment(this.nextMonth).format("MMMM YYYY");
-    },
-    selectedMonthExpenses: function() {
-      let x
-      if (this.monthToViewParam) {
-        x = moment(this.monthToViewParam, "MMMMYYYY").toDate();
-      } else {
-        x = new Date();
-      }
-      console.log("Getting the months data");
-      let k = moment(x).format("MMMMYYYY");
-      let filteredExpenses = this.rawExpenses[k];
-      if (filteredExpenses) {
-        return filteredExpenses.sort((a, b) => {
-          return b.dateCreated.seconds - a.dateCreated.seconds;
-        });
-      } else {
-        return [];
-      }
     },
     currentUser: function() {
       return this.$store.getters.getUser;
@@ -229,21 +211,13 @@ export default {
     }
   },
   methods: {
-    pullExpensesForSelectedMonth: async function(monthToPullDataFor) {
-      console.log("Before");
+    pullExpensesForSelectedMonth: function(monthToPullDataFor) {
       if (!monthToPullDataFor) {
         monthToPullDataFor = new Date();
       }
       this.isLoadingExpenses = true;
       let monthAsString = moment(monthToPullDataFor).format("MMMMYYYY");
-      if (
-        this.rawExpenses[monthAsString] != null &&
-        this.rawExpenses[monthAsString].length > 0
-      ) {
-        console.log("Data already present for", monthToPullDataFor, " exiting");
-        this.isLoadingExpenses = false;
-        return;
-      }
+
       let ref = `/users/${this.currentUser.uid}/expenses/`;
       ref = db.collection(ref);
       let lowerLimit = new Date(
@@ -262,18 +236,24 @@ export default {
       let query = ref
         .where("dateCreated", ">=", lowerLimit)
         .where("dateCreated", "<", upperLimit);
-      let snapshot = await query.get();
-      console.log("After");
-      let expenses = snapshot.docs.map(d => {
-        var data = d.data();
-        data.id = d.id;
-        return data;
+      query.onSnapshot( snapshot => {
+        let expenses = snapshot.docs.map(d => {
+          var data = d.data();
+          data.id = d.id;
+          return data;
+        });
+        this.$store.dispatch("updateRawExpenses", {
+          month: monthAsString,
+          expenses: expenses
+        });
+        if (moment(monthToPullDataFor).format("MMMMYYYY") == monthAsString) {
+          this.selectedMonthExpenses = expenses.sort((a, b) => {
+          return b.dateCreated.seconds - a.dateCreated.seconds;
+        });
+        }
+        this.isLoadingExpenses = false; 
       });
-      this.$store.dispatch("updateRawExpenses", {
-        month: monthAsString,
-        expenses: expenses
-      });
-      this.isLoadingExpenses = false; 
+
     },
     retrieveCategory: function (categoryId) {
       let category = this.categories.find( category => { return  category.id == categoryId } );
