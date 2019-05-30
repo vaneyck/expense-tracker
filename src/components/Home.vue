@@ -50,6 +50,7 @@
         <div class="column">
           <div>{{ expense.expenseName }}</div>
           <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
+          <div v-if="expense.categoryId" class="is-size-7 tag is-info" >{{ retrieveCategory(expense.categoryId) }}</div>
         </div>
         <div class="column">
           <span
@@ -65,6 +66,7 @@
     <section v-if="statsActive" class="section stats">
       <div class="has-text-centered">Stats for {{ formatedMonthInView }}</div>
       <line-chart :chart-data="chartData" :options="chartOptions"/>
+      <CategoryTable :selectedMonthExpenses="selectedMonthExpenses" :formatedMonthInView="formatedMonthInView"></CategoryTable>
     </section>
   </div>
 </template>
@@ -73,6 +75,7 @@
 import currencyFormatter from "currency-formatter";
 
 import EditExpense from "@/components/EditExpense";
+import CategoryTable from "@/components/CategoryTable";
 import LineChart from "@/components/LineChart";
 import { firebase } from "@/firebase";
 import moment from "moment";
@@ -84,6 +87,8 @@ export default {
   props: ["monthToViewParam"],
   data() {
     return {
+      categories: [],
+      expenses: [],
       isLoadingExpenses: true,
       listActive: true,
       statsActive: false
@@ -91,6 +96,23 @@ export default {
   },
   mounted: function() {
     this.pullExpensesForSelectedMonth(null);
+
+    // pull categories
+    let categoryRef = `/users/${this.currentUser.uid}/categories/`;
+    db.collection(categoryRef).onSnapshot(
+      doc => {
+        let x = doc.docs.map(d => {
+          var data = d.data();
+          data.id = d.id;
+          return data;
+        });
+        this.categories = x;
+        this.$store.dispatch('updateCategories', x);
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
   },
   computed: {
     rawExpenses: function() {
@@ -253,6 +275,14 @@ export default {
       });
       this.isLoadingExpenses = false; 
     },
+    retrieveCategory: function (categoryId) {
+      let category = this.categories.find( category => { return  category.id == categoryId } );
+      if (category) {
+        return category.name
+      } else {
+        null
+      }
+    },
     showEditExpenseModal: function() {
       this.$modal.open({
         parent: this,
@@ -308,11 +338,11 @@ export default {
     }
   },
   components: {
-    // EditExpense,
-    LineChart
+    LineChart,
+    CategoryTable
   },
   watch: {
-    monthToViewParam: function (newValue) {
+    monthToViewParam: function () {
       this.pullExpensesForSelectedMonth(this.monthToView);
     }
   }

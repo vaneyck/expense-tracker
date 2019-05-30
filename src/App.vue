@@ -2,10 +2,10 @@
   <div id="app" class="container">
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="#">
+        <router-link class="navbar-item" to="/home">
           <img src="/img/icons/favicon-32x32.png"/>
           <span>Caesh</span>
-        </a>
+        </router-link>
         <div
           class="navbar-burger burger"
           v-bind:class="{ 'is-active': mobileMenuActive }"
@@ -19,13 +19,22 @@
       <div class="navbar-menu" v-bind:class="{ 'is-active': mobileMenuActive }">
         <div class="navbar-end">
           <div class="navbar-item" v-if="currentUser">
-            <a href="#" v-on:click="signOut">Sign Out</a>
+            <router-link to="/settings">Settings</router-link>
           </div>
           <div class="navbar-item" v-if="currentUser">
-            <span class="display-name">{{ currentUser.displayName }}</span>
-            <figure class="image is-24x24">
-              <img :src="currentUser.photoURL">
-            </figure>
+            <b-dropdown>
+              <button class="button" slot="trigger">
+              <figure class="image is-24x24">
+                <img :src="currentUser.photoURL">
+              </figure>
+              </button>
+              <b-dropdown-item>
+                <span class="display-name">{{ currentUser.displayName }}</span>
+              </b-dropdown-item>
+              <b-dropdown-item>
+                <a href="#" v-on:click="signOut">Sign Out</a>
+              </b-dropdown-item>
+            </b-dropdown>
           </div>
         </div>
       </div>

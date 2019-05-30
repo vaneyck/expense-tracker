@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import SignIn from '@/components/SignIn'
+import Settings from '@/components/Settings'
 import { store } from '@/store'
 import { firebase } from '@/firebase'
 
@@ -13,6 +14,12 @@ const router = new Router({
       path: '/home/:monthToViewParam',
       name: 'monthView',
       component: Home,
+      props: true
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings,
       props: true
     },
     {
@@ -46,20 +53,20 @@ var getUser = function () {
 router.beforeEach(async function (to, from, next) {
   // check if going to signin page and call next() to proceed
   if (to.name === 'signin') {
-    //console.log("ROUTER: going to signin")
+    console.log("ROUTER: going to signin")
     next()
   } else {
     try {
-      //console.log("ROUTER:", new Date(), "getting user")
+      console.log("ROUTER:", new Date(), "getting user")
       let user = await getUser();
-      //console.log("ROUTER:", new Date(), "got user")
+      console.log("ROUTER:", new Date(), "got user")
       // check if the user is logged in
-      //console.log("ROUTER: user is logged in", user)
-      //console.log("ROUTER: going to requested page", to.name)
+      console.log("ROUTER: user is logged in", user)
+      console.log("ROUTER: going to requested page", to.name)
       next()
     } catch (error) {
-      //console.log("ROUTER: Error:", error)
-      //console.log("ROUTER: going to signin")
+      console.log("ROUTER: Error:", error)
+      console.log("ROUTER: going to signin")
       next({ name: 'signin' })
     }
   }

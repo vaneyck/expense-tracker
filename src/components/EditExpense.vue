@@ -11,17 +11,14 @@
       <b-field label="Amount">
         <b-input type="number" v-model.number="expense.expenseCost" placeholder="Cost" required></b-input>
       </b-field>
-      <b-field label="Categories (BETA)">
-        <b-taginput
-          v-model="this.expense.tags"
-          :data="filteredTags"
-          autocomplete
-          :allow-new="true"
-          field="tagName"
-          icon="tags"
-          placeholder="Add a tag"
-          @typing="getFilteredTags"
-        ></b-taginput>
+      <b-field label="Categories">
+        <b-select placeholder="Select a category" required expanded v-model="expense.categoryId">
+          <option
+            v-for="category in categories"
+            :value="category.id"
+            :key="category.id"
+          >{{ category.name }}</option>
+        </b-select>
       </b-field>
       <b-field v-if="expense.dateCreated" label="Date">
         <b-datepicker
@@ -58,28 +55,33 @@ export default {
   props: ["expenseId"],
   data() {
     return {
-      allTags: [
-        {
-          tagName: 'Food',
-          id: 1
-        },
-        {
-          tagName: 'Shopping',
-          id: 2
-        }
-      ],
-      filteredTags: [],
+      categories: [],
       deletingExpense: false,
       editingExpense: false,
       expense: {
         expenseName: null,
         expenseCost: 0,
         dateCreated: null,
+        categoryId: null,
         tags: []
       }
     };
   },
   mounted() {
+    // retrieve categories
+    let ref = `/users/${this.currentUser.uid}/categories/`;
+    db.collection(ref).onSnapshot(
+      doc => {
+        this.categories = doc.docs.map(d => {
+          var data = d.data();
+          data.id = d.id;
+          return data;
+        });
+      },
+      function(error) {
+        console.log(error);
+      }
+    );
     // retrieve the current expense
     if (this.expenseId) {
       let ref = `/users/${this.currentUser.uid}/expenses/${this.expenseId}`;
@@ -92,6 +94,7 @@ export default {
             let expenseData = doc.data();
             this.expense.expenseName = expenseData.expenseName;
             this.expense.expenseCost = expenseData.expenseCost;
+            this.expense.categoryId = expenseData.categoryId;
             this.expense.dateCreated = new Date(
               expenseData.dateCreated.seconds * 1000
             );
@@ -154,7 +157,8 @@ export default {
       var dataToSave = {
         expenseName: this.expense.expenseName,
         expenseCost: this.expense.expenseCost,
-        dateCreated: this.expense.dateCreated
+        dateCreated: this.expense.dateCreated,
+        categoryId: this.expense.categoryId
       };
       var saveSuccessFullHanlder = () => {
         console.log("Successfull added expense");
