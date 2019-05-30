@@ -50,7 +50,7 @@
         <div class="column">
           <div>{{ expense.expenseName }}</div>
           <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
-          <div class="is-size-7" >{{ retrieveCategory(expense.categoryId) }}</div>
+          <div v-if="expense.categoryId" class="is-size-7 tag is-info" >{{ retrieveCategory(expense.categoryId) }}</div>
         </div>
         <div class="column">
           <span

@@ -94,6 +94,7 @@ export default {
             let expenseData = doc.data();
             this.expense.expenseName = expenseData.expenseName;
             this.expense.expenseCost = expenseData.expenseCost;
+            this.expense.categoryId = expenseData.categoryId;
             this.expense.dateCreated = new Date(
               expenseData.dateCreated.seconds * 1000
             );
