@@ -29,6 +29,9 @@
               </figure>
               </button>
               <b-dropdown-item>
+                <span class="display-name">Version {{ version }}</span>
+              </b-dropdown-item>
+              <b-dropdown-item>
                 <span class="display-name">{{ currentUser.displayName }}</span>
               </b-dropdown-item>
               <b-dropdown-item>
@@ -58,7 +61,8 @@ export default {
   name: "App",
   data() {
     return {
-      mobileMenuActive: false
+      mobileMenuActive: false,
+      version: '2.1'
     };
   },
   computed: {
