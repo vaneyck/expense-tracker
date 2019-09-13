@@ -1,5 +1,5 @@
 import firebaseAPI from 'firebase'
-import firebaseUi from 'firebaseui'
+import * as firebaseui from "firebaseui"
 require('firebase/firestore')
 
 var config = {
@@ -14,14 +14,12 @@ var config = {
 // Initiailize the firebase App
 firebaseAPI.initializeApp(config)
 
-// Initialize the FirebaseUI Widget using Firebase.
-var ui = new firebaseUi.auth.AuthUI(firebaseAPI.auth())
+// Initialize the firebaseui Widget using Firebase.
+var ui = new firebaseui.auth.AuthUI(firebaseAPI.auth())
 
 // Firestore config
 var firestoreDatabase = firebaseAPI.firestore();
-const settings = {
-  timestampsInSnapshots: true
-}
+const settings = {}
 firestoreDatabase.settings(settings)
 
 firestoreDatabase.enablePersistence()

@@ -233,6 +233,9 @@ export default {
       let upperLimit = new Date(
         moment(nextMonth.setDate(1)).format("YYYY-MM-DD")
       );
+      console.log("lowerLimit", lowerLimit);
+      console.log("upperLimit", upperLimit);
+
       let query = ref
         .where("dateCreated", ">=", lowerLimit)
         .where("dateCreated", "<", upperLimit);
@@ -264,7 +267,7 @@ export default {
       }
     },
     showEditExpenseModal: function() {
-      this.$modal.open({
+      this.$buefy.modal.open({
         parent: this,
         component: EditExpense,
         hasModalCard: true
@@ -292,7 +295,7 @@ export default {
       });
     },
     editExpense: function(expenseId) {
-      this.$modal.open({
+      this.$buefy.modal.open({
         parent: this,
         component: EditExpense,
         hasModalCard: true,

@@ -9,14 +9,14 @@
     "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
-    "buefy": "^0.7.5",
+    "buefy": "^0.8.3",
     "chart.js": "^2.7.3",
     "core-js": "^2.6.5",
     "currency-formatter": "^1.4.2",
-    "firebase": "^4.12.1",
-    "firebaseui": "^2.4.1",
+    "firebase": "^6.6.1",
+    "firebaseui": "^4.2.0",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.15",
     "moment": "^2.22.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
