@@ -50,24 +50,11 @@ const app = dialogflow({
   clientId: "211067149885-l8hkoltdoc1ch0615l239m1vdj11ir2k.apps.googleusercontent.com",
 });
 
-// Create a Dialogflow intent with the `actions_intent_SIGN_IN` event.
-app.intent('Get Signin', (conv, params, signin) => {
-  if (signin.status === 'OK') {
-    const payload = conv.user.profile.payload;
-    conv.ask(`I got your account details, ${payload.name}. What do you want to do next?`);
-  } else {
-    conv.ask(`I won't be able to save your data, but what do you want to do next?`);
-  }
-});
-
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
     const agent = new WebhookClient({ request, response });
     console.log('Dialogflow Request headers: ', request.headers);
     console.log('Dialogflow Request body: ', request.body);
 
-    // Uncomment and edit to make your own intent handler
-    // uncomment `intentMap.set('your intent name here', yourFunctionHandler);`
-    // below to get this function to be run when a Dialogflow intent is matched
     function yourFunctionHandler(agent) {
         var messageToReplyWith = request.body.queryResult.fulfillmentText;
 
@@ -83,14 +70,13 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         };
 
         agent.add(messageToReplyWith);
-        agent.add(new Card({
-            title: `Recorded Expense`,
-            //imageUrl: 'https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png',
-            text: `${messageToReplyWith}`,
-            buttonText: 'Edit Expense',
-            buttonUrl: 'https://assistant.google.com/'
-        })
-        );
+        // agent.add(new Card({
+        //     title: `Recorded Expense`,
+        //     //imageUrl: 'https://developers.google.com/actions/images/badges/XPM_BADGING_GoogleAssistant_VER.png',
+        //     text: `${messageToReplyWith}`,
+        //     buttonText: 'Edit Expense',
+        //     buttonUrl: 'https://assistant.google.com/'
+        // }));
 
         //agent.add(new Suggestion(`Quick Reply`));
         //agent.add(new Suggestion(`Suggestion`));
@@ -102,18 +88,29 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     // below to get this function to be run when a Dialogflow intent is matched
     function googleAssistantHandler(agent) {
         let conv = agent.conv();
-        conv.ask(new SignIn('To get your account details')) // Get Actions on Google library conv instance
+        conv.ask(new SignIn('To get your account details'));
+        // Get Actions on Google library conv instance
         //conv.ask('Hello from the Actions on Google client library!') // Use Actions on Google library
         //agent.add(conv); // Add Actions on Google library responses to your agent's response
     }
     // See https://github.com/dialogflow/dialogflow-fulfillment-nodejs/tree/master/samples/actions-on-google
     // for a complete Dialogflow fulfillment library Actions on Google client library v2 integration sample
 
+    function handleSignin(conv, params, signin) {
+      if (signin.status === 'OK') {
+        const payload = conv.user.profile.payload;
+        conv.ask(`I got your account details, ${payload.name}. What do you want to do next?`);
+      } else {
+        conv.ask(`I won't be able to save your data, but what do you want to do next?`);
+      }
+    }
+
     // Run the proper function handler based on the matched Dialogflow intent name
     let intentMap = new Map();
 
     intentMap.set('Record Expense', yourFunctionHandler);
-    intentMap.set('Start Signin', googleAssistantHandler);
+    intentMap.set('actions.intent.SIGN_IN', googleAssistantHandler);
+    intentMap.set('ask_for_sign_in_confirmation', handleSignin);
 
     agent.handleRequest(intentMap);
 });
