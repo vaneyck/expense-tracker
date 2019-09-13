@@ -33,14 +33,16 @@
           </button>
         </b-datepicker>
       </b-field>
-    <b-field v-if="expense.dateCreated" label="Select Time">
+      <b-field v-if="expense.dateCreated" label="Time">
         <b-timepicker
-            v-model="expense.dateCreated"
-            placeholder="Type or Select a date..."
-            icon="clock-o"
-            editable>
+          v-model="expense.dateCreated"
+          placeholder="Type or Select a date..."
+          icon="clock-o"
+          editable
+          inline
+        >
         </b-timepicker>
-    </b-field>
+      </b-field>
     </section>
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
