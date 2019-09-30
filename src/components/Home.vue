@@ -41,23 +41,7 @@
       </ul>
     </div>
     <section v-if="listActive" class="section expenses">
-      <div
-        class="columns is-mobile expense"
-        @click="editExpense(expense.id)"
-        v-for="expense in selectedMonthExpenses"
-        :key="expense.id"
-      >
-        <div class="column">
-          <div>{{ expense.expenseName }}</div>
-          <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
-          <div v-if="expense.categoryId" class="is-size-7 tag is-info" >{{ retrieveCategory(expense.categoryId) }}</div>
-        </div>
-        <div class="column">
-          <span
-            class="is-pulled-right is-size-4 has-text-weight-bold"
-          >{{ formatAmount(expense.expenseCost) }}</span>
-        </div>
-      </div>
+      <ExpenseList :expenses="selectedMonthExpenses" />
       <b-loading :active.sync="isLoadingExpenses" :canCancel="false"></b-loading>
       <div v-if="(selectedMonthExpenses.length == 0)" class="no-expenses">
         <p class="heading has-text-centered">Record some expenses for {{ formatedMonthInView }}</p>
@@ -65,8 +49,11 @@
     </section>
     <section v-if="statsActive" class="section stats">
       <div class="has-text-centered">Stats for {{ formatedMonthInView }}</div>
-      <line-chart :chart-data="chartData" :options="chartOptions"/>
-      <CategoryTable :selectedMonthExpenses="selectedMonthExpenses" :formatedMonthInView="formatedMonthInView"></CategoryTable>
+      <line-chart :chart-data="chartData" :options="chartOptions" />
+      <CategoryTable
+        :selectedMonthExpenses="selectedMonthExpenses"
+        :formatedMonthInView="formatedMonthInView"
+      ></CategoryTable>
     </section>
   </div>
 </template>
@@ -77,6 +64,7 @@ import currencyFormatter from "currency-formatter";
 import EditExpense from "@/components/EditExpense";
 import CategoryTable from "@/components/CategoryTable";
 import LineChart from "@/components/LineChart";
+import ExpenseList from "@/components/ExpenseList";
 import { firebase } from "@/firebase";
 import moment from "moment";
 import _ from "lodash";
@@ -87,7 +75,6 @@ export default {
   props: ["monthToViewParam"],
   data() {
     return {
-      categories: [],
       selectedMonthExpenses: [],
       isLoadingExpenses: true,
       listActive: true,
@@ -96,23 +83,6 @@ export default {
   },
   mounted: function() {
     this.pullExpensesForSelectedMonth(null);
-
-    // pull categories
-    let categoryRef = `/users/${this.currentUser.uid}/categories/`;
-    db.collection(categoryRef).onSnapshot(
-      doc => {
-        let x = doc.docs.map(d => {
-          var data = d.data();
-          data.id = d.id;
-          return data;
-        });
-        this.categories = x;
-        this.$store.dispatch('updateCategories', x);
-      },
-      function(error) {
-        console.log(error);
-      }
-    );
   },
   computed: {
     rawExpenses: function() {
@@ -239,7 +209,7 @@ export default {
       let query = ref
         .where("dateCreated", ">=", lowerLimit)
         .where("dateCreated", "<", upperLimit);
-      query.onSnapshot( snapshot => {
+      query.onSnapshot(snapshot => {
         let expenses = snapshot.docs.map(d => {
           var data = d.data();
           data.id = d.id;
@@ -251,20 +221,11 @@ export default {
         });
         if (moment(monthToPullDataFor).format("MMMMYYYY") == monthAsString) {
           this.selectedMonthExpenses = expenses.sort((a, b) => {
-          return b.dateCreated.seconds - a.dateCreated.seconds;
-        });
+            return b.dateCreated.seconds - a.dateCreated.seconds;
+          });
         }
-        this.isLoadingExpenses = false; 
+        this.isLoadingExpenses = false;
       });
-
-    },
-    retrieveCategory: function (categoryId) {
-      let category = this.categories.find( category => { return  category.id == categoryId } );
-      if (category) {
-        return category.name
-      } else {
-        null
-      }
     },
     showEditExpenseModal: function() {
       this.$buefy.modal.open({
@@ -294,22 +255,9 @@ export default {
         params: { monthToViewParam: moment(this.nextMonth).format("MMMMYYYY") }
       });
     },
-    editExpense: function(expenseId) {
-      this.$buefy.modal.open({
-        parent: this,
-        component: EditExpense,
-        hasModalCard: true,
-        props: {
-          expenseId: expenseId
-        }
-      });
-    },
     formatAmount: function(amount) {
       // TODO Pull code from a user's defined currency
       return currencyFormatter.format(amount, { code: "" });
-    },
-    formatDate: function(seconds) {
-      return moment(new Date(seconds * 1000)).format("DD MMMM YYYY hh:mm a");
     },
     showStatsTab: function() {
       this.listActive = false;
@@ -322,27 +270,18 @@ export default {
   },
   components: {
     LineChart,
-    CategoryTable
+    CategoryTable,
+    ExpenseList
   },
   watch: {
-    monthToViewParam: function () {
+    monthToViewParam: function() {
       this.pullExpensesForSelectedMonth(this.monthToView);
     }
   }
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.expense {
-  border-bottom: 1px solid #c2c2c2;
-  cursor: pointer;
-}
-
-.expense-date {
-  font-size: 0.8em;
-}
-
 .contols .column button {
   width: 90%;
 }
