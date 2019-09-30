@@ -54,14 +54,14 @@ export default {
   },
   methods: {
     showCreateCateforyModal: function() {
-      this.$modal.open({
+      this.$buefy.modal.open({
         parent: this,
         component: EditCategory,
         hasModalCard: true
       });
     },
     showEditCateforyModal: function(categoryId) {
-      this.$modal.open({
+      this.$buefy.modal.open({
         parent: this,
         component: EditCategory,
         hasModalCard: true,
