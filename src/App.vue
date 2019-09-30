@@ -3,9 +3,12 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <router-link class="navbar-item" to="/home">
-          <img src="/img/icons/favicon-32x32.png"/>
+          <img src="/img/icons/favicon-32x32.png" />
           <span>Caesh</span>
         </router-link>
+        <div class="navbar-item">
+          <BuyMeCoffee />
+        </div>
         <div
           class="navbar-burger burger"
           v-bind:class="{ 'is-active': mobileMenuActive }"
@@ -24,9 +27,9 @@
           <div class="navbar-item" v-if="currentUser">
             <b-dropdown>
               <button class="button" slot="trigger">
-              <figure class="image is-24x24">
-                <img :src="currentUser.photoURL">
-              </figure>
+                <figure class="image is-24x24">
+                  <img :src="currentUser.photoURL" />
+                </figure>
               </button>
               <b-dropdown-item>
                 <span class="display-name">Version {{ version }}</span>
@@ -42,13 +45,14 @@
         </div>
       </div>
     </nav>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import Buefy from "buefy";
+import BuyMeCoffee from "@/components/BuyMeCoffee";
 import "buefy/dist/buefy.css";
 import "font-awesome/css/font-awesome.min.css";
 import { firebase } from "@/firebase";
@@ -59,10 +63,13 @@ Vue.use(Buefy, {
 
 export default {
   name: "App",
+  components: {
+    BuyMeCoffee
+  },
   data() {
     return {
       mobileMenuActive: false,
-      version: '2.1'
+      version: "2.1"
     };
   },
   computed: {
