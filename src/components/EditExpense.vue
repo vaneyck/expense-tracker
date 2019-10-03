@@ -1,10 +1,15 @@
 <template>
   <div class="edit-expense">
-    <section class="section">
-      <p v-if="expenseId" class="modal-card-title">Edit Expense</p>
-      <p v-else class="modal-card-title">Add Expense</p>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <div class="container">
+          <h1 v-if="expenseId" class="title">Edit Expense</h1>
+          <h1 v-else class="title">Add Expense</h1>
+          <!-- <h2 class="subtitle">Hero subtitle</h2> -->
+        </div>
+      </div>
     </section>
-    <section class="">
+    <section class="main-content">
       <b-field label="Expense">
         <b-input type="text" v-model="expense.expenseName" placeholder="Your Expense" required></b-input>
       </b-field>
@@ -40,12 +45,11 @@
           icon="clock-o"
           editable
           inline
-        >
-        </b-timepicker>
+        ></b-timepicker>
       </b-field>
     </section>
     <section class="section edit-buttons">
-      <button class="button" type="button" @click="$parent.close()">Close</button>
+      <button class="button" type="button" @click="$router.go(-1)">Back</button>
       <button class="button is-primary" @click="saveExpense" :disabled="!isValidForm">Save</button>
       <button
         v-if="expenseId"
@@ -213,5 +217,9 @@ export default {
 
 .edit-buttons > * {
   margin-right: 10px;
+}
+
+.main-content {
+    padding: 15px;
 }
 </style>
