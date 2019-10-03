@@ -158,7 +158,7 @@ export default {
           .delete()
           .then(() => {
             console.log("expense deleted");
-            this.$parent.close();
+            this.$router.go(-1);
           })
           .catch(error => {
             console.log(error);
