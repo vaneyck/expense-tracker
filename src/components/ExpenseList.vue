@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import EditExpense from "@/components/EditExpense";
 import currencyFormatter from "currency-formatter";
 import { firebase } from "@/firebase";
 import moment from "moment";
@@ -63,13 +62,9 @@ export default {
   },
   methods: {
     editExpense: function(expenseId) {
-      this.$buefy.modal.open({
-        parent: this,
-        component: EditExpense,
-        hasModalCard: true,
-        props: {
-          expenseId: expenseId
-        }
+      this.$router.push({
+        name: "expenseEdit",
+        params: { expenseId: expenseId }
       });
     },
     formatDate: function(seconds) {

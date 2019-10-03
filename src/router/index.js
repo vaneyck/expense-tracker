@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/components/Home'
+import Home from '@/views/Home'
 import SignIn from '@/components/SignIn'
+import Expense from '@/views/Expense';
 import Settings from '@/components/Settings'
 import { store } from '@/store'
 import { firebase } from '@/firebase'
@@ -15,6 +16,17 @@ const router = new Router({
       name: 'monthView',
       component: Home,
       props: true
+    },
+    {
+      path: '/expense/:expenseId',
+      name: 'expenseEdit',
+      component: Expense,
+      props: true
+    },
+    {
+      path: '/expense',
+      name: 'expenseCreate',
+      component: Expense,
     },
     {
       path: '/settings',

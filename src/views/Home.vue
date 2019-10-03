@@ -61,7 +61,6 @@
 <script>
 import currencyFormatter from "currency-formatter";
 
-import EditExpense from "@/components/EditExpense";
 import CategoryTable from "@/components/CategoryTable";
 import LineChart from "@/components/LineChart";
 import ExpenseList from "@/components/ExpenseList";
@@ -228,10 +227,8 @@ export default {
       });
     },
     showEditExpenseModal: function() {
-      this.$buefy.modal.open({
-        parent: this,
-        component: EditExpense,
-        hasModalCard: true
+      this.$router.push({
+        name: "expenseCreate"
       });
     },
     showCurrentMonthExpenses: function() {

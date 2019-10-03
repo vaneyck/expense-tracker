@@ -1,10 +1,10 @@
 <template>
-  <div class="edit-expense modal-card">
-    <header class="modal-card-head">
+  <div class="edit-expense">
+    <section class="section">
       <p v-if="expenseId" class="modal-card-title">Edit Expense</p>
       <p v-else class="modal-card-title">Add Expense</p>
-    </header>
-    <section class="modal-card-body">
+    </section>
+    <section class="">
       <b-field label="Expense">
         <b-input type="text" v-model="expense.expenseName" placeholder="Your Expense" required></b-input>
       </b-field>
@@ -44,7 +44,7 @@
         </b-timepicker>
       </b-field>
     </section>
-    <footer class="modal-card-foot">
+    <section class="section edit-buttons">
       <button class="button" type="button" @click="$parent.close()">Close</button>
       <button class="button is-primary" @click="saveExpense" :disabled="!isValidForm">Save</button>
       <button
@@ -52,7 +52,7 @@
         class="button is-danger"
         @click="deleteExpense"
       >{{ deleteExpenseText }}</button>
-    </footer>
+    </section>
   </div>
 </template>
 
@@ -172,7 +172,7 @@ export default {
       };
       var saveSuccessFullHanlder = () => {
         console.log("Successfull added expense");
-        this.$toast.open({
+        this.$buefy.toast.open({
           message: "Your expense has been recorded",
           type: "is-success",
           duration: 3000,
@@ -196,7 +196,7 @@ export default {
             console.log("Error adding expense : " + error);
           });
       }
-      this.$parent.close();
+      this.$router.go(-1);
     }
   }
 };
@@ -209,5 +209,9 @@ export default {
 
 .modal-card-body {
   overflow: visible !important;
+}
+
+.edit-buttons > * {
+  margin-right: 10px;
 }
 </style>
