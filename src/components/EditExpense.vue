@@ -1,6 +1,6 @@
 <template>
   <div class="edit-expense">
-    <section class="hero is-primary">
+    <section class="hero is-info">
       <div class="hero-body">
         <div class="container">
           <h1 v-if="expenseId" class="title">Edit Expense</h1>
@@ -32,7 +32,7 @@
           icon="calendar"
           position="is-top-right"
         >
-          <button class="button is-primary" @click="date = new Date()">
+          <button class="button is-info" @click="date = new Date()">
             <b-icon icon="calendar"></b-icon>
             <span>Today</span>
           </button>
@@ -50,7 +50,7 @@
     </section>
     <section class="section edit-buttons">
       <button class="button" type="button" @click="$router.go(-1)">Back</button>
-      <button class="button is-primary" @click="saveExpense" :disabled="!isValidForm">Save</button>
+      <button class="button is-info" @click="saveExpense" :disabled="!isValidForm">Save</button>
       <button
         v-if="expenseId"
         class="button is-danger"
@@ -158,6 +158,12 @@ export default {
           .delete()
           .then(() => {
             console.log("expense deleted");
+            this.$buefy.toast.open({
+              message: "Your expense has been deleted",
+              type: "is-danger",
+              duration: 3000,
+              position: "is-bottom"
+            });
             this.$router.go(-1);
           })
           .catch(error => {
@@ -220,6 +226,6 @@ export default {
 }
 
 .main-content {
-    padding: 15px;
+  padding: 15px;
 }
 </style>
