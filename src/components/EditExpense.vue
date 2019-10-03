@@ -54,7 +54,7 @@
         </div>
         <div class="column">
           <b-field v-if="expense.dateCreated" label="Time">
-            <b-timepicker v-model="expense.dateCreated" :inline="true" size="is-small" icon="clock-o"></b-timepicker>
+            <b-timepicker v-model="expense.dateCreated" :inline="false" :enable-seconds="true" :mobile-native="true" icon="clock-o"></b-timepicker>
           </b-field>
         </div>
       </div>
