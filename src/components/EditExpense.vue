@@ -13,40 +13,51 @@
       <b-field label="Expense">
         <b-input type="text" v-model="expense.expenseName" placeholder="Your Expense" required></b-input>
       </b-field>
-      <b-field label="Amount">
-        <b-input type="number" v-model.number="expense.expenseCost" placeholder="Cost" required></b-input>
-      </b-field>
-      <b-field label="Categories">
-        <b-select placeholder="Select a category" required expanded v-model="expense.categoryId">
-          <option
-            v-for="category in categories"
-            :value="category.id"
-            :key="category.id"
-          >{{ category.name }}</option>
-        </b-select>
-      </b-field>
-      <b-field v-if="expense.dateCreated" label="Date">
-        <b-datepicker
-          v-model="expense.dateCreated"
-          placeholder="Click to select..."
-          icon="calendar"
-          position="is-top-right"
-        >
-          <button class="button is-info" @click="date = new Date()">
-            <b-icon icon="calendar"></b-icon>
-            <span>Today</span>
-          </button>
-        </b-datepicker>
-      </b-field>
-      <b-field v-if="expense.dateCreated" label="Time">
-        <b-timepicker
-          v-model="expense.dateCreated"
-          placeholder="Type or Select a date..."
-          icon="clock-o"
-          editable
-          inline
-        ></b-timepicker>
-      </b-field>
+      <div class="columns is-mobile">
+        <div class="column">
+          <b-field label="Amount">
+            <b-input type="number" v-model.number="expense.expenseCost" placeholder="Cost" required></b-input>
+          </b-field>
+        </div>
+        <div class="column">
+          <b-field label="Categories">
+            <b-select
+              placeholder="Select a category"
+              required
+              expanded
+              v-model="expense.categoryId"
+            >
+              <option
+                v-for="category in categories"
+                :value="category.id"
+                :key="category.id"
+              >{{ category.name }}</option>
+            </b-select>
+          </b-field>
+        </div>
+      </div>
+      <div class="columns is-mobile">
+        <div class="column">
+          <b-field v-if="expense.dateCreated" label="Date">
+            <b-datepicker
+              v-model="expense.dateCreated"
+              placeholder="Click to select..."
+              icon="calendar"
+              position="is-top-right"
+            >
+              <button class="button is-info" @click="date = new Date()">
+                <b-icon icon="calendar"></b-icon>
+                <span>Today</span>
+              </button>
+            </b-datepicker>
+          </b-field>
+        </div>
+        <div class="column">
+          <b-field v-if="expense.dateCreated" label="Time">
+            <b-timepicker v-model="expense.dateCreated" placeholder="Click to select..."></b-timepicker>
+          </b-field>
+        </div>
+      </div>
     </section>
     <section class="section edit-buttons">
       <button class="button" type="button" @click="$router.go(-1)">Back</button>
@@ -219,6 +230,10 @@ export default {
 
 .modal-card-body {
   overflow: visible !important;
+}
+
+.edit-buttons {
+  padding: 5px 15px;
 }
 
 .edit-buttons > * {
