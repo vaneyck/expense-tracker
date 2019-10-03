@@ -1,10 +1,10 @@
 <template>
   <div class="edit-expense">
-    <section class="hero is-info">
+    <section class="hero">
       <div class="hero-body">
         <div class="container">
-          <h1 v-if="expenseId" class="title">Edit Expense</h1>
-          <h1 v-else class="title">Add Expense</h1>
+          <h1 v-if="expenseId" class="title has-text-info">Edit Expense</h1>
+          <h1 v-else class="title has-text-info">Add Expense</h1>
           <!-- <h2 class="subtitle">Hero subtitle</h2> -->
         </div>
       </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="column">
           <b-field v-if="expense.dateCreated" label="Time">
-            <b-timepicker v-model="expense.dateCreated" placeholder="Click to select..."></b-timepicker>
+            <b-timepicker v-model="expense.dateCreated" :inline="true" size="is-small" icon="clock-o"></b-timepicker>
           </b-field>
         </div>
       </div>
