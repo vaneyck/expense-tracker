@@ -1,25 +1,27 @@
 <template>
   <div>
-    <div
-      class="columns is-mobile expense"
-      @click="editExpense(expense.id)"
-      v-for="expense in expenses"
-      :key="expense.id"
-    >
-      <div class="column">
-        <div>{{ expense.expenseName }}</div>
-        <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
-        <div
-          v-if="expense.categoryId"
-          class="is-size-7 tag is-info"
-        >{{ retrieveCategory(expense.categoryId) }}</div>
+    <transition-group name="list">
+      <div
+        class="columns is-mobile expense"
+        @click="editExpense(expense.id)"
+        v-for="expense in expenses"
+        :key="expense.id"
+      >
+        <div class="column">
+          <div>{{ expense.expenseName }}</div>
+          <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
+          <div
+            v-if="expense.categoryId"
+            class="is-size-7 tag is-info"
+          >{{ retrieveCategory(expense.categoryId) }}</div>
+        </div>
+        <div class="column">
+          <span
+            class="is-pulled-right is-size-4 has-text-weight-bold"
+          >{{ formatAmount(expense.expenseCost) }}</span>
+        </div>
       </div>
-      <div class="column">
-        <span
-          class="is-pulled-right is-size-4 has-text-weight-bold"
-        >{{ formatAmount(expense.expenseCost) }}</span>
-      </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 

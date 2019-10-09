@@ -278,7 +278,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss">
 .contols .column button {
   width: 90%;
 }
@@ -302,5 +302,25 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+// Message Transitions. Read more https://vuejs.org/v2/guide/transitions.html
+.list-enter-active,
+.list-move,
+.list-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.list-enter {
+  opacity: 0;
+  -webkit-transform: scale(0);
+  transform: scale(0);
+}
+
+.list-leave-active {
+  opacity: 0;
+  position: absolute;
+  -webkit-transform: scale(0);
+  transform: scale(0);
 }
 </style>
