@@ -45,34 +45,37 @@ firestoreDatabase.enablePersistence()
 const messagingApi = firebaseAPI.messaging();
 messagingApi.usePublicVapidKey("BPcBcrqojNuTKM2Ar1aZU9rr31X2nctN0e_ccCgYfSNQlwVTPJEC7eRDAYhQJ2kPjVdeMb1BR0A2WC9A6grej08");
 
-Notification.requestPermission().then((permission) => {
-  if (permission === 'granted') {
-    console.log('Notification permission granted.');
-  } else {
-    console.log('Unable to get permission to notify.');
-  }
-});
+// Notification.requestPermission().then((permission) => {
+//   if (permission === 'granted') {
+//     console.log('Notification permission granted.');
+//   } else {
+//     console.log('Unable to get permission to notify.');
+//   }
+// });
 
-messagingApi.getToken().then((currentToken) => {
-  if (currentToken) {
-    console.log("Current Token")
-  } else {
-    // Show permission request.
-    console.log('No Instance ID token available. Request permission to generate one.');
-  }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-});
+// messagingApi.getToken().then((currentToken) => {
+//   if (currentToken) {
+//     console.log("Current Token", currentToken);
+//   } else {
+//     // Show permission request.
+//     console.log('No Instance ID token available. Request permission to generate one.');
+//   }
+// }).catch((err) => {
+//   console.log('An error occurred while retrieving token. ', err);
+// });
 
-// Callback fired if Instance ID token is updated.
-messagingApi.onTokenRefresh(() => {
-  messaging.getToken().then((refreshedToken) => {
-    console.log('Token refreshed.', refreshedToken);
-    // ...
-  }).catch((err) => {
-    console.log('Unable to retrieve refreshed token ', err);
-  });
-});
+// // Callback fired if Instance ID token is updated.
+// messagingApi.onTokenRefresh(() => {
+//   messaging.getToken().then((refreshedToken) => {
+//     console.log('Token refreshed.', refreshedToken);
+//     // ...
+//   }).catch((err) => {
+//     console.log('Unable to retrieve refreshed token ', err);
+//   });
+// });
+
+// TODO
+// Continue here : https://firebase.google.com/docs/cloud-messaging/js/receive?authuser=0
 
 export const firebase = firebaseAPI
 export const signInUi = ui
