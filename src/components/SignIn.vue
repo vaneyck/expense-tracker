@@ -1,7 +1,7 @@
 <template>
   <div id="landing-page">
     <div class="section">
-      <img src="/img/icons/android-chrome-512x512.png"/>
+      <img src="/img/icons/android-chrome-192x192.png"/>
       <p class="is-size-1">Caesh</p>
     </div>
     <div id="signin"></div>
@@ -19,7 +19,10 @@ export default {
     var uiConfig = {
       // TODO Find out how to generate links
       signInSuccessUrl: "/#/",
-      signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
+      signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+      ],
       // Terms of service url.
       tosUrl: "/terms-of_service"
     };
