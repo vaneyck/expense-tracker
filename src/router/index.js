@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/views/Home'
 import SignIn from '@/components/SignIn'
 import Expense from '@/views/Expense';
+import ViewCategoryExpenses from '@/views/ViewCategoryExpenses';
 import Settings from '@/components/Settings'
 import { store } from '@/store'
 import { firebase } from '@/firebase'
@@ -43,6 +44,12 @@ const router = new Router({
       path: '/',
       name: 'signin',
       component: SignIn
+    },
+    {
+      path: '/category/:categoryId',
+      name: 'categoryView',
+      component: ViewCategoryExpenses,
+      props: true
     }
   ]
 })

@@ -32,7 +32,7 @@ export const store = new Vuex.Store({
       state.user = userLoginData
     },
     updateRawExpenses (state, rawExpenseData) {
-      state.rawExpenses[rawExpenseData.month] = rawExpenseData.expenses
+      state.rawExpenses = rawExpenseData
     }
   },
   /**

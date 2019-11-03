@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr class="clickable" @click="goToCategoryView">
     <td>{{ categoryName }}</td>
     <td class="is-size-4 has-text-weight-bold">{{ formatAmount(totalPerCategory) }}</td>
   </tr>
@@ -15,6 +15,13 @@ export default {
     formatAmount: function(amount) {
       // TODO Pull code from a user's defined currency
       return currencyFormatter.format(amount, { code: "" });
+    },
+    goToCategoryView: function() {
+      this.$store.dispatch("updateRawExpenses", this.categoryData);
+      this.$router.push({
+        name: "categoryView",
+        params: { categoryId: this.categoryId }
+      });
     }
   },
   computed: {
@@ -39,3 +46,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.clickable {
+  cursor: pointer;
+}
+</style>

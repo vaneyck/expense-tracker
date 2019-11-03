@@ -77,7 +77,8 @@ export default {
       selectedMonthExpenses: [],
       isLoadingExpenses: true,
       listActive: true,
-      statsActive: false
+      statsActive: false,
+      expenseFirestoreListener: null
     };
   },
   mounted: function() {
@@ -208,15 +209,11 @@ export default {
       let query = ref
         .where("dateCreated", ">=", lowerLimit)
         .where("dateCreated", "<", upperLimit);
-      query.onSnapshot(snapshot => {
+      this.expenseFirestoreListener = query.onSnapshot(snapshot => {
         let expenses = snapshot.docs.map(d => {
           var data = d.data();
           data.id = d.id;
           return data;
-        });
-        this.$store.dispatch("updateRawExpenses", {
-          month: monthAsString,
-          expenses: expenses
         });
         if (moment(monthToPullDataFor).format("MMMMYYYY") == monthAsString) {
           this.selectedMonthExpenses = expenses.sort((a, b) => {
@@ -272,6 +269,10 @@ export default {
   },
   watch: {
     monthToViewParam: function() {
+      if (typeof this.expenseFirestoreListener === "function") {
+        console.log("Canceling previous month's listener", new Date())
+        this.expenseFirestoreListener();
+      }
       this.pullExpensesForSelectedMonth(this.monthToView);
     }
   }
