@@ -205,7 +205,7 @@ export default {
         let ref = `/users/${this.currentUser.uid}/expenses/`;
         db.collection(ref)
           .doc(this.expenseId)
-          .set(dataToSave)
+          .set(dataToSave, { merge: true})
           .then(saveSuccessFullHanlder);
       } else {
         let ref = `/users/${this.currentUser.uid}/expenses/`;
