@@ -48,11 +48,11 @@ var learnCategories = async function (userId) {
 
 exports.autoCategoriseExpense = functions.firestore.document('/users/{uid}/expenses/{expenseId}')
   .onCreate((snap, context) => {
-    console.log("UID :", uid)
+    console.log("UID :", context.params.uid)
     const original = snap.data();
     console.log("DATA : ", original)
 
-    learnCategories(uid).then(network => {
+    learnCategories(context.params.uid).then(network => {
       console.log(network)
     })
     return true
