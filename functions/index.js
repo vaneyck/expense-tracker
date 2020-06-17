@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const brain = require("brain.js")
 
 admin.initializeApp();
 const firestore = admin.firestore();
@@ -15,20 +16,45 @@ const firestore = admin.firestore();
         categoryId: null
       }
 }
- * @param {*} data 
  */
-var storeExpense = function (data) {
-  let ref = `/users/${data.uid}/expenses/`;
-  firestore.collection(ref)
-    .doc(this.expenseId)
-    .set(data.expenseData)
-    .then(saveSuccessFullHanlder);
+
+var learnCategories = async function (userId) {
+  const config = {
+    iterations: 500,
+    log: true,
+    logPeriod: 100,
+    layers: [10],
+    errorThresh: 0.00005,
+  };
+
+  let ref = `/users/${userId}/expenses/`;
+  ref = firestore.collection(ref);
+  var trainingData = []
+
+  let querySnapshot = await ref
+    .where("categoryId", ">=", "")
+    .limit(200)
+    .get()
+
+  querySnapshot.forEach(function (doc) {
+    const data = doc.data()
+    trainingData.push({ input: data.expenseName, output: data.categoryId })
+  });
+
+  const network = new brain.recurrent.LSTM();
+  network.train(trainingData, config)
+  return network
 }
 
 exports.autoCategoriseExpense = functions.firestore.document('/users/{uid}/expenses/{expenseId}')
   .onCreate((snap, context) => {
+    console.log("UID :", uid)
     const original = snap.data();
     console.log("DATA : ", original)
+
+    learnCategories(uid).then(network => {
+      console.log(network)
+    })
     return true
     // return snap.ref.set({ uppercase }, { merge: true });
   });

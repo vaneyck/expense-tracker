@@ -25,3 +25,6 @@ yarn-error.log*
 
 # Firebase
 .firebase
+
+# service.json
+functions/expense-tracker-ac6d8-firebase-adminsdk-oigy2-190c817c7d.json

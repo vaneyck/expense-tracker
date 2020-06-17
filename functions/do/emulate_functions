@@ -1,0 +1,2 @@
+export GOOGLE_APPLICATION_CREDENTIALS="expense-tracker-ac6d8-firebase-adminsdk-oigy2-190c817c7d.json"
+firebase emulators:start

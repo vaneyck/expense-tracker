@@ -67,6 +67,8 @@ import ExpenseList from "@/components/ExpenseList";
 import { firebase } from "@/firebase";
 import moment from "moment";
 import _ from "lodash";
+// import { learnCategories } from "@/util/learn"
+
 var db = firebase.firestore();
 
 export default {
@@ -83,6 +85,7 @@ export default {
   },
   mounted: function() {
     this.pullExpensesForSelectedMonth(null);
+    // learnCategories(this.currentUser.uid)
   },
   computed: {
     rawExpenses: function() {
@@ -270,7 +273,7 @@ export default {
   watch: {
     monthToViewParam: function() {
       if (typeof this.expenseFirestoreListener === "function") {
-        console.log("Canceling previous month's listener", new Date())
+        console.log("Canceling previous month's listener", new Date());
         this.expenseFirestoreListener();
       }
       this.pullExpensesForSelectedMonth(this.monthToView);
