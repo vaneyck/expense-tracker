@@ -5,6 +5,7 @@
       <p>
         <span>Manage Categories</span>
         <button class="button is-small add-category" @click="showCreateCateforyModal">Add Category</button>
+        <button class="button is-small is-danger" @click="learnToCategorize">Learn To Categorize</button>
       </p>
       <div v-if="isLoadingCatgories">
         <b-loading :active.sync="isLoadingCatgories" :canCancel="false"></b-loading>
@@ -21,16 +22,17 @@
 <script>
 import EditCategory from "@/components/EditCategory";
 import { firebase } from "@/firebase";
+import axios from "axios";
 var db = firebase.firestore();
 
 export default {
-  data () {
+  data() {
     return {
       categories: null,
       isLoadingCatgories: true
-    }
+    };
   },
-  mounted: function () {
+  mounted: function() {
     let ref = `/users/${this.currentUser.uid}/categories/`;
     db.collection(ref).onSnapshot(
       doc => {
@@ -50,9 +52,22 @@ export default {
   computed: {
     currentUser: function() {
       return this.$store.getters.getUser;
-    },
+    }
   },
   methods: {
+    learnToCategorize: function() {
+      var url = "https://expense-tracker-ac6d8.uc.r.appspot.com/forcelearning";
+      axios
+        .post(url, {
+          uid: this.currentUser.uid
+        })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     showCreateCateforyModal: function() {
       this.$buefy.modal.open({
         parent: this,
@@ -69,7 +84,7 @@ export default {
           categoryId: categoryId
         }
       });
-    },
+    }
   }
 };
 </script>
@@ -85,7 +100,7 @@ export default {
 .category-container {
   padding: 10px;
 }
-.category-listing .category{
+.category-listing .category {
   padding: 3px;
 }
 .settings-container {

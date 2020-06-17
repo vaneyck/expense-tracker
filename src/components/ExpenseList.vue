@@ -1,15 +1,16 @@
 <template>
   <div>
     <transition-group name="list">
-      <div
-        class="columns is-mobile expense"
-        @click="editExpense(expense.id)"
-        v-for="expense in expenses"
-        :key="expense.id"
-      >
-        <div class="column">
+      <div class="columns is-mobile expense" v-for="expense in expenses" :key="expense.id">
+        <div class="column is-two-thirds">
           <div>{{ expense.expenseName }}</div>
           <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
+          <div class="is-size-7 tag" @click="editExpense(expense.id)">Edit</div>
+          <div
+            v-if="!expense.categoryId"
+            class="is-size-7 tag is-danger"
+            @click="autoCategorize(expense.id)"
+          >Auto Categorize</div>
           <div
             v-if="expense.categoryId"
             class="is-size-7 tag is-info"
@@ -29,6 +30,7 @@
 import currencyFormatter from "currency-formatter";
 import { firebase } from "@/firebase";
 import moment from "moment";
+import axios from "axios";
 
 var db = firebase.firestore();
 
@@ -63,6 +65,20 @@ export default {
     }
   },
   methods: {
+    autoCategorize: function(expenseId) {
+      var url = "https://expense-tracker-ac6d8.uc.r.appspot.com/";
+      axios
+        .post(url, {
+          uid: this.currentUser.uid,
+          expenseId: expenseId
+        })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    },
     editExpense: function(expenseId) {
       this.$router.push({
         name: "expenseEdit",
