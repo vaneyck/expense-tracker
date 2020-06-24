@@ -6,6 +6,7 @@
         <span>Manage Categories</span>
         <button class="button is-small add-category" @click="showCreateCateforyModal">Add Category</button>
         <button class="button is-small is-danger" @click="learnToCategorize">Learn To Categorize</button>
+        <button class="button is-small">{{ new Date(dateModelBuilt.seconds * 1000) }}</button>
       </p>
       <div v-if="isLoadingCatgories">
         <b-loading :active.sync="isLoadingCatgories" :canCancel="false"></b-loading>
@@ -28,6 +29,7 @@ var db = firebase.firestore();
 export default {
   data() {
     return {
+      dateModelBuilt: 0,
       categories: null,
       isLoadingCatgories: true
     };
@@ -48,6 +50,12 @@ export default {
         this.isLoadingCatgories = false;
       }
     );
+
+    let modelRef = `/users/${this.currentUser.uid}/brain/model`;
+    db.doc(modelRef).get().then(snapshot => {
+      let map = snapshot.data()
+      this.dateModelBuilt = map.dateModelBuilt
+    })
   },
   computed: {
     currentUser: function() {
