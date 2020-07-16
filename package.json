@@ -18,7 +18,7 @@
     "firebase-tools": "^7.3.2",
     "firebaseui": "^4.2.0",
     "font-awesome": "^4.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment": "^2.22.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
