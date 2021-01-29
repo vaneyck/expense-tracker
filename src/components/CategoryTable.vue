@@ -5,6 +5,7 @@
       <thead>
         <th>Category</th>
         <th>Amount</th>
+        <th>Budgeted Amount</th>
       </thead>
       <tbody>
         <CatergoryEntry

@@ -3,10 +3,12 @@
     <p class="heading">Settings</p>
     <section class="category-container">
       <p>
-        <span>Manage Categories</span>
+        <span class="is-size-3">Manage Categories</span>
+        <!-- <button class="button is-small is-danger" @click="learnToCategorize">Learn To Categorize</button>
+        <button class="button is-small">{{ new Date(dateModelBuilt.seconds * 1000) }}</button> -->
+      </p>
+      <p>
         <button class="button is-small add-category" @click="showCreateCateforyModal">Add Category</button>
-        <button class="button is-small is-danger" @click="learnToCategorize">Learn To Categorize</button>
-        <button class="button is-small">{{ new Date(dateModelBuilt.seconds * 1000) }}</button>
       </p>
       <div v-if="isLoadingCatgories">
         <b-loading :active.sync="isLoadingCatgories" :canCancel="false"></b-loading>
@@ -14,6 +16,7 @@
       <div v-else class="category-listing">
         <div class="category" v-for="(category, id) in categories" :key="id">
           <span @click="showEditCateforyModal(category.id)">{{ category.name }}</span>
+          <span class="is-pulled-right"> {{category.budgetedAmount}} </span>
         </div>
       </div>
     </section>

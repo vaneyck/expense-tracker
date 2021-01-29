@@ -2,6 +2,7 @@
   <tr class="clickable" @click="goToCategoryView">
     <td>{{ categoryName }}</td>
     <td class="is-size-4 has-text-weight-bold">{{ formatAmount(totalPerCategory) }}</td>
+    <td class="is-size-4 has-text-weight-bold" v-bind:class="{ 'has-text-danger' : isAboveBudget, 'has-text-info' : !isAboveBudget  }"> {{ formatAmount(categoryBudget) }}</td>
   </tr>
 </template>
 
@@ -36,6 +37,19 @@ export default {
         return category.name;
       } else {
         return "Uncategorised";
+      }
+    },
+    isAboveBudget: function () {
+      return (this.totalPerCategory > this.categoryBudget);
+    },
+    categoryBudget: function() {
+      let category = this.categories.find(category => {
+        return category.id == this.categoryId;
+      });
+      if (category) {
+        return category.budgetedAmount;
+      } else {
+        return 0;
       }
     },
     totalPerCategory: function() {

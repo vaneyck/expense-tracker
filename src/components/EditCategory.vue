@@ -8,6 +8,9 @@
       <b-field label="Category Name">
         <b-input type="text" v-model="catergory.name" placeholder="Your Category" required></b-input>
       </b-field>
+      <b-field label="Category Name">
+        <b-input type="number" v-model="catergory.budgetedAmount" placeholder="Budgetted Amount" required></b-input>
+      </b-field>
     </section>
     <footer class="modal-card-foot">
       <button class="button" type="button" @click="$parent.close()">Close</button>
@@ -34,6 +37,7 @@ export default {
       editingCategory: false,
       catergory: {
         name: null,
+        budgetedAmount: 0
       }
     };
   },
@@ -47,6 +51,7 @@ export default {
             this.editingCategory = true;
             let categoryData = doc.data();
             this.catergory.name = categoryData.name;
+            this.catergory.budgetedAmount = categoryData.budgetedAmount;
           } else {
             console.log("no such document available");
           }
@@ -92,6 +97,7 @@ export default {
     saveCategory: function() {
       var dataToSave = {
         name: this.catergory.name,
+        budgetedAmount: this.catergory.budgetedAmount
       };
       var saveSuccessFullHanlder = () => {
         console.log("Successfull added category");
