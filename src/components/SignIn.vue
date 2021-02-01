@@ -18,7 +18,7 @@ export default {
     console.log("Mounted SignIn Page");
     var uiConfig = {
       // TODO Find out how to generate links
-      signInSuccessUrl: "/#/",
+      signInSuccessUrl: "/",
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID

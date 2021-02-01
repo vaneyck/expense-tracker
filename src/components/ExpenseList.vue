@@ -1,16 +1,15 @@
 <template>
   <div>
     <transition-group name="list">
-      <div class="columns is-mobile expense" v-for="expense in expenses" :key="expense.id">
-        <div class="column is-two-thirds">
+      <div class="columns is-mobile expense" v-for="(expense, index) in expenses" :key="expense.id">
+        <div class="column is-two-thirds" @click="viewExpense(expense, index)">
           <div>{{ expense.expenseName }}</div>
           <div class="expense-date">{{ formatDate(expense.dateCreated.seconds) }}</div>
-          <div class="is-size-7 tag" @click="editExpense(expense.id)">Edit</div>
-          <div
+          <!-- <div
             v-if="!expense.categoryId"
             class="is-size-7 tag is-danger"
             @click="autoCategorize(expense.id)"
-          >Auto Categorize</div>
+          >Auto Categorize</div> -->
           <div
             v-if="expense.categoryId"
             class="is-size-7 tag is-info"
@@ -79,10 +78,12 @@ export default {
           console.log(error);
         });
     },
-    editExpense: function(expenseId) {
+    viewExpense: function(expense, index) {
+      var month = moment(expense.dateCreated.toDate()).format("MMMMYYYY")
+      console.log(month)
       this.$router.push({
-        name: "expenseEdit",
-        params: { expenseId: expenseId }
+        name: "expenseView",
+        params: { expenseId: expense.id, expenses: this.expenses, index: index, monthExpenseBelongsTo: month}
       });
     },
     formatDate: function(seconds) {

@@ -84,7 +84,13 @@ export default {
     };
   },
   mounted: function() {
-    this.pullExpensesForSelectedMonth(null);
+    var m 
+    if (this.monthToViewParam) {
+      m = moment(this.monthToViewParam, "MMMMYYYY").toDate()
+    } else {
+      m = new Date()
+    }
+    this.pullExpensesForSelectedMonth(m);
     // learnCategories(this.currentUser.uid)
   },
   computed: {

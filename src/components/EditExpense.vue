@@ -54,7 +54,7 @@
         </div>
         <div class="column">
           <b-field v-if="expense.dateCreated" label="Time">
-            <b-timepicker v-model="expense.dateCreated" :inline="false" :enable-seconds="true" :mobile-native="true" icon="clock-o"></b-timepicker>
+            <b-timepicker v-model="expense.dateCreated" :inline="false" :enable-seconds="true" :mobile-native="false" icon="clock-o"></b-timepicker>
           </b-field>
         </div>
       </div>
@@ -192,7 +192,7 @@ export default {
         categoryId: this.expense.categoryId
       };
       var saveSuccessFullHanlder = () => {
-        console.log("Successfull added expense");
+        console.log("Successfull saved expense");
         this.$buefy.toast.open({
           message: "Your expense has been recorded",
           type: "is-success",
@@ -238,9 +238,5 @@ export default {
 
 .edit-buttons > * {
   margin-right: 10px;
-}
-
-.main-content {
-  padding: 15px;
 }
 </style>

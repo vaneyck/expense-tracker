@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
+import LandingPage from '@/views/LandingPage'
 import SignIn from '@/components/SignIn'
 import Expense from '@/views/Expense';
+import ViewExpense from '@/views/ViewExpense';
 import ViewCategoryExpenses from '@/views/ViewCategoryExpenses';
 import Settings from '@/components/Settings'
 import { store } from '@/store'
@@ -11,6 +13,7 @@ import { firebase } from '@/firebase'
 Vue.use(Router)
 
 const router = new Router({
+  mode: 'history',
   routes: [
     {
       path: '/home/:monthToViewParam',
@@ -22,6 +25,12 @@ const router = new Router({
       path: '/expense/:expenseId',
       name: 'expenseEdit',
       component: Expense,
+      props: true
+    },
+    {
+      path: '/expenseview/:expenseId',
+      name: 'expenseView',
+      component: ViewExpense,
       props: true
     },
     {
@@ -41,9 +50,14 @@ const router = new Router({
       component: Home
     },
     {
-      path: '/',
+      path: '/signin',
       name: 'signin',
       component: SignIn
+    },
+    {
+      path: '/',
+      name: 'landingpage',
+      component: LandingPage
     },
     {
       path: '/category/:categoryId',
@@ -71,7 +85,10 @@ var getUser = function () {
  */
 router.beforeEach(async function (to, from, next) {
   // check if going to signin page and call next() to proceed
-  if (to.name === 'signin') {
+  if (to.name === 'landingpage') {
+    console.log("ROUTER: going to landingpage")
+    next()
+  } else if (to.name === 'signin') {
     console.log("ROUTER: going to signin")
     next()
   } else {

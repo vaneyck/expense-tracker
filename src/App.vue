@@ -6,97 +6,57 @@
           <img src="/img/icons/favicon-32x32.png" />
           <span>Caesh</span>
         </router-link>
-        <div class="navbar-item">
-          <BuyMeCoffee />
-        </div>
-        <div
-          class="navbar-burger burger"
-          v-bind:class="{ 'is-active': mobileMenuActive }"
-          @click="toggleMobileMenu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-      <div class="navbar-menu" v-bind:class="{ 'is-active': mobileMenuActive }">
-        <div class="navbar-end">
-          <div class="navbar-item" v-if="currentUser">
-            <router-link to="/settings">Settings</router-link>
-          </div>
-          <div class="navbar-item" v-if="currentUser">
-            <b-dropdown>
-              <button class="button" slot="trigger">
-                <figure class="image is-24x24">
-                  <img :src="currentUser.photoURL" />
-                </figure>
-              </button>
-              <b-dropdown-item>
-                <span class="display-name">Version {{ version }}</span>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <span class="display-name">{{ currentUser.displayName }}</span>
-              </b-dropdown-item>
-              <b-dropdown-item>
-                <a href="#" v-on:click="signOut">Sign Out</a>
-              </b-dropdown-item>
-            </b-dropdown>
-          </div>
+        <div class="navbar-item is-pulled-right" v-if="currentUser">
+          <router-link to="/settings">Settings</router-link>
         </div>
       </div>
     </nav>
-    <router-view />
+    <div class="main-content">
+      <div class="columns is-mobile" v-if="currentUser">
+        <div class="column">
+          <a @click="goBack" class="button is-small">Back</a>
+        </div>
+        <div class="column">
+          <a @click="goForward" class="button is-pulled-right is-small">Forward</a>
+        </div>
+      </div>
+      <router-view />
+    </div>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
 import Buefy from "buefy";
-import BuyMeCoffee from "@/components/BuyMeCoffee";
+// import BuyMeCoffee from "@/components/BuyMeCoffee";
 import "buefy/dist/buefy.css";
 import "font-awesome/css/font-awesome.min.css";
-import { firebase } from "@/firebase";
 
 Vue.use(Buefy, {
-  defaultIconPack: "fa"
+  defaultIconPack: "fa",
 });
 
 export default {
   name: "App",
   components: {
-    BuyMeCoffee
+    // BuyMeCoffee
   },
   data() {
     return {
       mobileMenuActive: false,
-      version: "2.1"
+      version: "2.1",
     };
   },
   computed: {
-    currentUser: function() {
+    currentUser: function () {
       return this.$store.getters.getUser;
-    }
+    },
   },
-  mounted: function() {
+  mounted: function () {
     this.determineBrowserDimensions();
   },
   methods: {
-    signOut: function() {
-      this.$store.dispatch("updateUser", null);
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.$router.push({ name: "signin" });
-        })
-        .catch(error => {
-          console.log("Failed Signed out" + error);
-        });
-    },
-    toggleMobileMenu: function() {
-      this.mobileMenuActive = !this.mobileMenuActive;
-    },
-    determineBrowserDimensions: function() {
+    determineBrowserDimensions: function () {
       //> HEIGHT
       let vh = window.innerHeight * 0.01;
       // Then we set the value in the --vh custom property to the root of the document
@@ -107,12 +67,18 @@ export default {
         let vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty("--vh", `${vh}px`);
       });
-    }
-  }
+    },
+    goBack: function () {
+      this.$router.go(-1);
+    },
+    goForward: function () {
+      this.$router.go(1);
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style>
 .display-name {
   margin-right: 16px;
 }
@@ -120,5 +86,8 @@ export default {
 #app {
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
+}
+.main-content {
+  padding: 10px 10px;
 }
 </style>
