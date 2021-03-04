@@ -48,7 +48,8 @@
       </div>
     </section>
     <section v-if="statsActive" class="section stats">
-      <div class="has-text-centered">Stats for {{ formatedMonthInView }}</div>
+      <div class="has-text-centered is-size-3">Stats for {{ formatedMonthInView }}</div>
+      <br/>
       <line-chart :chart-data="chartData" :options="chartOptions" />
       <CategoryTable
         :selectedMonthExpenses="selectedMonthExpenses"
