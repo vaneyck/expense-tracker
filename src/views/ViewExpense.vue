@@ -11,7 +11,7 @@
           <button class="button" @click="backToMonthView">View Month Data</button>
         </div>
         <div class="column">
-          <button class="button" @click="goToPreviousExpense"><</button>
+          <button class="button" @click="goToPreviousExpense"></button>
         </div>
         <div class="column has-text-centered">
           {{ index + 1 }} / {{ expenses.length }}
