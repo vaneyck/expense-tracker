@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
+import Caesh from '@/views/Caesh'
 import LandingPage from '@/views/LandingPage'
 import SignIn from '@/components/SignIn'
 import Expense from '@/views/Expense';
@@ -19,6 +20,12 @@ const router = new Router({
       path: '/home/:monthToViewParam',
       name: 'monthView',
       component: Home,
+      props: true
+    },
+    {
+      path: '/caesh',
+      name: 'caesh',
+      component: Caesh,
       props: true
     },
     {
@@ -80,13 +87,23 @@ var getUser = function () {
     })
   })
 }
+
+var getUserToken = function () {
+  return new Promise((resolve, reject) => {
+    firebase.auth().currentUser.getIdToken(true).then(function(idToken) {
+      resolve(idToken);
+    }).catch(function(error) {
+      reject("Could not get ID Token", error);
+    });
+  })
+}
 /**
  * Redirect to the sign in page if user is not logged in
  */
 router.beforeEach(async function (to, from, next) {
   // check if going to signin page and call next() to proceed
   if (to.name === 'landingpage') {
-    console.log("ROUTER: going to landingpage")
+    console.log("ROUTER: going to caesh")
     next()
   } else if (to.name === 'signin') {
     console.log("ROUTER: going to signin")
@@ -95,6 +112,8 @@ router.beforeEach(async function (to, from, next) {
     try {
       console.log("ROUTER:", new Date(), "getting user")
       let user = await getUser();
+      let token = await getUserToken();
+      store.dispatch('updateToken', token);
       console.log("ROUTER:", new Date(), "got user")
       // check if the user is logged in
       console.log("ROUTER: user is logged in", user)
