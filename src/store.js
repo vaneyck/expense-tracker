@@ -6,7 +6,6 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   state: {
     user: null,
-    token: null,
     rawExpenses: {},
     categories: []
   },
@@ -20,9 +19,6 @@ export const store = new Vuex.Store({
     getUser(state) {
       return state.user
     },
-    getToken(state) {
-      return state.token
-    },
     getRawExpenses(state) { return state.rawExpenses }
   },
   /**
@@ -34,9 +30,6 @@ export const store = new Vuex.Store({
     },
     updateUser(state, userLoginData) {
       state.user = userLoginData
-    },
-    updateToken(state, token) {
-      state.token = token
     },
     updateRawExpenses (state, rawExpenseData) {
       state.rawExpenses = rawExpenseData
@@ -51,9 +44,6 @@ export const store = new Vuex.Store({
     },
     updateUser(context, userLoginData) {
       context.commit('updateUser', userLoginData)
-    },
-    updateToken(context, token) {
-      context.commit('updateToken', token)
     },
     updateRawExpenses (context, rawExpenseData) {
       context.commit('updateRawExpenses', rawExpenseData)

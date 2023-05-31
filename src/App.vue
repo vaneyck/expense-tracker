@@ -13,12 +13,12 @@
     </nav>
     <div class="main-content">
       <div class="columns is-mobile" v-if="currentUser">
-        <!-- <div class="column">
+        <div class="column">
           <a @click="goBack" class="button is-small">Back</a>
         </div>
         <div class="column">
           <a @click="goForward" class="button is-pulled-right is-small">Forward</a>
-        </div> -->
+        </div>
       </div>
       <router-view />
     </div>
