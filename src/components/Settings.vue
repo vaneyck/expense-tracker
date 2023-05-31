@@ -145,7 +145,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .add-category {
   margin-left: 5px;
 }

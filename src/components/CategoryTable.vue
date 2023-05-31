@@ -75,12 +75,13 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style scoped>
 .category-table {
   margin-left: 20px;
   margin-bottom: 100px;
-  .table {
+}
+
+.category-table .table {
     width: 100%;
   }
-}
 </style>
