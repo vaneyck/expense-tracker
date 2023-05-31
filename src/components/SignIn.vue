@@ -40,7 +40,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 #signin {
   display: inline-block;
 }
