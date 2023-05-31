@@ -21,11 +21,11 @@
                 <b-field label="Expense Amount">
                     {{ createExpenseModel.expenseCurrency }} : <b-input type="number" v-model="createExpenseModel.expenseAmount" placeholder="How much did you spend?" required></b-input>
                 </b-field>
-                <button @click="saveNewExpense">Save Expense</button>
+                <button :disabled="{'disabled' : createExpenseModel.savingExpense}">Save Expense</button>
             </div>
             <ul>
                 <li v-for="(expense, index) in expenses" :key="index">
-                    {{ expense.created_date }} // {{ expense.expense_description }} // {{ expense.expense_currency }} {{ expense.expense_amount }}
+                    {{ expense.expense_description }} // {{ expense.expense_currency }} {{ expense.expense_ammount }}
                 </li>
             </ul>
         </div>
@@ -67,7 +67,7 @@ export default {
             getAxios(baseUrl, this.authToken)
                 .get('/v1/accounts')
                 .then((response) => {
-                    console.log(response.data);
+                    console.log(response.data.data.accounts);
                     this.accounts = response.data.data.accounts;
                 });
         },
@@ -77,7 +77,7 @@ export default {
                 .post('/v1/accounts', {
                 })
                 .then((response) => {
-                    console.log(response.data);
+                    console.log(response.data.data.accounts);
                     this.accounts = response.data.data.accounts;
                 });
         },
@@ -86,26 +86,8 @@ export default {
             getAxios(baseUrl, this.authToken)
                 .get(this.getAccountBaseUrl(this.selectedAccoundId) + '/expenses')
                 .then((response) => {
-                    console.log(response.data);
-                    this.expenses = response.data.data.expenses;
-                });
-        },
-        saveNewExpense: function () {
-            let baseUrl = 'http://localhost:8080';
-            let createExpensePayload = {
-                "expense_description": this.createExpenseModel.expenseDescription,
-                "expense_amount": this.createExpenseModel.expenseAmount,
-                "expense_currency": this.createExpenseModel.expenseCurrency,
-            };
-
-            getAxios(baseUrl, this.authToken)
-                .post(this.getAccountBaseUrl(this.selectedAccoundId) + '/expenses', createExpensePayload)
-                .then((response) => {
-                    console.log(response.data);
-                    this.pullExpenses();
-                    // Reset create object
-                    this.createExpenseModel.expenseDescription = "";
-                    this.createExpenseModel.expenseAmount = 0;
+                    console.log(response.data.data.expenses);
+                    this.accounts = response.data.data.expenses;
                 });
         },
         getAccountBaseUrl: function (accountUuid) {
