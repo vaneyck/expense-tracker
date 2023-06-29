@@ -1,33 +1,69 @@
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+const { onRequest } = require("firebase-functions/v2/https");
+const { logger } = require("firebase-functions");
+const { initializeApp } = require("firebase-admin/app");
+const { getFirestore, Timestamp } = require("firebase-admin/firestore");
+const moment = require("moment");
 
-admin.initializeApp();
-const firestore = admin.firestore();
+initializeApp();
 
-/**
- * data should be of the form
-{
-    uid: "someid",
-    expenseData: {
-        expenseName: "ASD",
-        expenseCost: 345,
-        dateCreated: new Date(),
-        categoryId: null
+exports.getStatistics = onRequest(
+  async (req, res) => {
+    const uuid = req.query.uuid;
+    const lowerLimit = req.query.lower_limit;
+    const upperLimit = req.query.upper_limit;
+
+    const rawExpenses = await getFirestore()
+      .collection('users')
+      .doc(uuid)
+      .collection("expenses")
+      .where("dateCreated", ">=", new Date(lowerLimit))
+      .where("dateCreated", "<", new Date(upperLimit))
+      .get();
+
+    const rawCategories = await getFirestore()
+      .collection('users')
+      .doc(uuid)
+      .collection("categories")
+      .get();
+
+    const categories = rawCategories.docs.map(doc => {
+      var map = doc.data();
+      map["id"] = doc.id;
+      return map;
+    });
+
+    const expenses = rawExpenses.docs.map(doc => {
+      var map = doc.data();
+      map["id"] = doc.id;
+      return map;
+    });
+
+    // Compute Daily Usage
+    var dailyUsage = new Map();
+    for (var x = 0; x < expenses.length; x++) {
+      const singleExpense = expenses[x];
+      var dateAsString = moment(singleExpense.dateCreated._seconds * 1000).format("MM/DD/YYYY");
+
+      if (dailyUsage.get(dateAsString) == null) {
+        dailyUsage.set(dateAsString, singleExpense.expenseCost);
+      } else {
+        dailyUsage.set(dateAsString, (dailyUsage.get(dateAsString) + singleExpense.expenseCost));
       }
-}
- */
+    }
 
-exports.autoCategoriseExpense = functions.firestore.document('/users/{uid}/expenses/{expenseId}')
-  .onCreate((snap, context) => {
-    console.log("UID :", context.params.uid)
-    const original = snap.data();
-    console.log("DATA : ", original)
-    return true
-    // return snap.ref.set({ uppercase }, { merge: true });
+    // Template Graph
+    var singleGraph = {
+      title: "",
+      chart_type: "BAR_CHART",
+      x: [],
+      y: []
+    }
+
+    let clone = Object.assign({}, singleGraph);
+    clone.title = "Daily Usage";
+    clone.chart_type = "BAR_CHART";
+    clone.x = Array.from(dailyUsage.keys());
+    clone.y = Array.from(dailyUsage.values());
+
+    res.json([clone]);
   });
-
-// exports.addMessage = functions.https.onRequest(async (req, res) => {
-//   const original = req.query.text;
-//   const writeResult = await admin.firestore().collection('messages').add({original: original});
-//   res.json({result: `Message with ID: ${writeResult.id} added.`});
-// });
