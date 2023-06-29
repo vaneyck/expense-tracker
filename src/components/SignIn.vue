@@ -31,8 +31,10 @@ export default {
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        console.log("going to home");
         router.replace({ path: "home" });
       } else {
+        console.log("going to signin");
         router.push({ path: "signin" });
       }
     });
