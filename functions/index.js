@@ -40,7 +40,7 @@ exports.getStatistics = onRequest(
 
 
     var dailyUsage = new Map();
-    var usageVsBudget = new Map();
+    var dailyFrequency = new Map();
     
     var totalUsage = 0;
     var totalBudget = 0;
@@ -48,11 +48,22 @@ exports.getStatistics = onRequest(
     for (var x = 0; x < expenses.length; x++) {
       // Calculate usage per day
       const singleExpense = expenses[x];
-      var dateAsString = moment(singleExpense.dateCreated._seconds * 1000).format("MM/DD/YYYY");
+
+      var fullYearFormat = "MM/DD/YYYY";
+      var dayFormat = "MM/DD";
+
+      var dateAsString = moment(singleExpense.dateCreated._seconds * 1000).format(dayFormat);
       if (dailyUsage.get(dateAsString) == null) {
         dailyUsage.set(dateAsString, singleExpense.expenseCost);
       } else {
         dailyUsage.set(dateAsString, (dailyUsage.get(dateAsString) + singleExpense.expenseCost));
+      }
+
+      // Calculate daily frequency
+      if (dailyFrequency.get(dateAsString) == null) {
+        dailyFrequency.set(dateAsString, 1);
+      } else {
+        dailyFrequency.set(dateAsString, (dailyFrequency.get(dateAsString) + 1));
       }
 
       // Calculate total usage
@@ -80,9 +91,15 @@ exports.getStatistics = onRequest(
 
     let totalUsageChart = Object.assign({}, singleGraph);
     totalUsageChart.title = "Usage vs Bugdet"
-    totalUsageChart.chart_type = "HORIZONTAL_BAR_CHART";
+    totalUsageChart.chart_type = "VERTICAL_BAR_CHART";
     totalUsageChart.x = ["Usage", "Budget"];
     totalUsageChart.y = [totalUsage, totalBudget];
 
-    res.json([dailyUsageChart, totalUsageChart]);
+    let dailyFrequencyChart = Object.assign({}, singleGraph);
+    dailyFrequencyChart.title = "No. of Transactions Per Day";
+    dailyFrequencyChart.chart_type = "VERTICAL_BAR_CHART";
+    dailyFrequencyChart.x = Array.from(dailyFrequency.keys());
+    dailyFrequencyChart.y = Array.from(dailyFrequency.values());
+
+    res.json([dailyUsageChart, totalUsageChart, dailyFrequencyChart]);
   });
