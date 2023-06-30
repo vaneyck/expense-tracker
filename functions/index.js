@@ -67,20 +67,20 @@ exports.getStatistics = onRequest(
     // Template Graph
     var singleGraph = {
       title: "",
-      chart_type: "BAR_CHART",
+      chart_type: "VERTICAL_BAR_CHART",
       x: [],
       y: []
     }
 
     let dailyUsageChart = Object.assign({}, singleGraph);
     dailyUsageChart.title = "Daily Usage";
-    dailyUsageChart.chart_type = "BAR_CHART";
+    dailyUsageChart.chart_type = "VERTICAL_BAR_CHART";
     dailyUsageChart.x = Array.from(dailyUsage.keys());
     dailyUsageChart.y = Array.from(dailyUsage.values());
 
     let totalUsageChart = Object.assign({}, singleGraph);
     totalUsageChart.title = "Usage vs Bugdet"
-    totalUsageChart.chart_type = "BAR_CHART";
+    totalUsageChart.chart_type = "HORIZONTAL_BAR_CHART";
     totalUsageChart.x = ["Usage", "Budget"];
     totalUsageChart.y = [totalUsage, totalBudget];
 
