@@ -38,17 +38,30 @@ exports.getStatistics = onRequest(
       return map;
     });
 
-    // Compute Daily Usage
+
     var dailyUsage = new Map();
+    var usageVsBudget = new Map();
+    
+    var totalUsage = 0;
+    var totalBudget = 0;
+
     for (var x = 0; x < expenses.length; x++) {
+      // Calculate usage per day
       const singleExpense = expenses[x];
       var dateAsString = moment(singleExpense.dateCreated._seconds * 1000).format("MM/DD/YYYY");
-
       if (dailyUsage.get(dateAsString) == null) {
         dailyUsage.set(dateAsString, singleExpense.expenseCost);
       } else {
         dailyUsage.set(dateAsString, (dailyUsage.get(dateAsString) + singleExpense.expenseCost));
       }
+
+      // Calculate total usage
+      totalUsage += singleExpense.expenseCost;
+    }
+
+    for (var x = 0; x < categories.length; x++) {
+      const singleCategory = categories[x];
+      totalBudget += parseFloat(singleCategory.budgetedAmount);
     }
 
     // Template Graph
@@ -59,11 +72,17 @@ exports.getStatistics = onRequest(
       y: []
     }
 
-    let clone = Object.assign({}, singleGraph);
-    clone.title = "Daily Usage";
-    clone.chart_type = "BAR_CHART";
-    clone.x = Array.from(dailyUsage.keys());
-    clone.y = Array.from(dailyUsage.values());
+    let dailyUsageChart = Object.assign({}, singleGraph);
+    dailyUsageChart.title = "Daily Usage";
+    dailyUsageChart.chart_type = "BAR_CHART";
+    dailyUsageChart.x = Array.from(dailyUsage.keys());
+    dailyUsageChart.y = Array.from(dailyUsage.values());
 
-    res.json([clone]);
+    let totalUsageChart = Object.assign({}, singleGraph);
+    totalUsageChart.title = "Usage vs Bugdet"
+    totalUsageChart.chart_type = "BAR_CHART";
+    totalUsageChart.x = ["Usage", "Budget"];
+    totalUsageChart.y = [totalUsage, totalBudget];
+
+    res.json([dailyUsageChart, totalUsageChart]);
   });
