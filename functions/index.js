@@ -9,8 +9,8 @@ initializeApp();
 exports.getStatistics = onRequest(
   async (req, res) => {
     const uuid = req.query.uuid;
-    const lowerLimit = req.query.lower_limit;
-    const upperLimit = req.query.upper_limit;
+    const lowerLimit = parseInt(req.query.lower_limit);
+    const upperLimit = parseInt(req.query.upper_limit);
 
     const rawExpenses = await getFirestore()
       .collection('users')
@@ -41,9 +41,11 @@ exports.getStatistics = onRequest(
 
     var dailyUsage = new Map();
     var dailyFrequency = new Map();
+    var transactionChargesFrequency = new Map();
     
     var totalUsage = 0;
     var totalBudget = 0;
+    var totalTransactonCharges = 0;
 
     for (var x = 0; x < expenses.length; x++) {
       // Calculate usage per day
@@ -66,8 +68,21 @@ exports.getStatistics = onRequest(
         dailyFrequency.set(dateAsString, (dailyFrequency.get(dateAsString) + 1));
       }
 
+      let transactionCost = 0;
+      if (singleExpense.mpesaTransactionCost != null) {
+        transactionCost = parseFloat(singleExpense.mpesaTransactionCost);
+      }
+
+      // Transaction Charges
+      if (transactionChargesFrequency.get(dateAsString) == null) {
+        transactionChargesFrequency.set(dateAsString, transactionCost);
+      } else {
+        transactionChargesFrequency.set(dateAsString, (transactionChargesFrequency.get(dateAsString) + transactionCost));
+      }
+
       // Calculate total usage
       totalUsage += singleExpense.expenseCost;
+      totalTransactonCharges += transactionCost;
     }
 
     for (var x = 0; x < categories.length; x++) {
@@ -95,11 +110,23 @@ exports.getStatistics = onRequest(
     totalUsageChart.x = ["Usage", "Budget"];
     totalUsageChart.y = [totalUsage, totalBudget];
 
+    let transactionChart = Object.assign({}, singleGraph);
+    transactionChart.title = "Transaction Charges"
+    transactionChart.chart_type = "VERTICAL_BAR_CHART";
+    transactionChart.x = ["Charges",];
+    transactionChart.y = [totalTransactonCharges];
+
     let dailyFrequencyChart = Object.assign({}, singleGraph);
-    dailyFrequencyChart.title = "No. of Transactions Per Day";
+    dailyFrequencyChart.title = "No. of Transactions Daily";
     dailyFrequencyChart.chart_type = "VERTICAL_BAR_CHART";
     dailyFrequencyChart.x = Array.from(dailyFrequency.keys());
     dailyFrequencyChart.y = Array.from(dailyFrequency.values());
 
-    res.json([dailyUsageChart, totalUsageChart, dailyFrequencyChart]);
+    let transactionChargesChart = Object.assign({}, singleGraph);
+    transactionChargesChart.title = "Transaction Costs Daily";
+    transactionChargesChart.chart_type = "VERTICAL_BAR_CHART";
+    transactionChargesChart.x = Array.from(transactionChargesFrequency.keys());
+    transactionChargesChart.y = Array.from(transactionChargesFrequency.values());
+
+    res.json([dailyUsageChart, transactionChargesChart, transactionChart, totalUsageChart, dailyFrequencyChart]);
   });
