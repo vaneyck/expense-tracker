@@ -9,8 +9,9 @@ initializeApp();
 exports.getStatistics = onRequest(
   async (req, res) => {
     const uuid = req.query.uuid;
-    const lowerLimit = parseInt(req.query.lower_limit);
-    const upperLimit = parseInt(req.query.upper_limit);
+    // Expecting dates in the format MM/dd/yyyy i.e. 08/01/2023
+    const lowerLimit = req.query.lower_limit;
+    const upperLimit = req.query.upper_limit;
 
     const rawExpenses = await getFirestore()
       .collection('users')
