@@ -2,6 +2,7 @@ const { onRequest } = require("firebase-functions/v2/https");
 const { logger } = require("firebase-functions");
 const { initializeApp } = require("firebase-admin/app");
 const { getFirestore, Timestamp } = require("firebase-admin/firestore");
+const { getAuth } = require("firebase-admin/auth");
 const moment = require("moment");
 const cors = require('cors')({origin: true});
 
@@ -138,3 +139,14 @@ exports.getStatistics = onRequest(
       doStuff(req, res);
     });
   });
+
+exports.disableAccount = onRequest(
+    async (req, res) => {
+      cors(req, res, () => {
+        const uuid = req.query.uuid;
+        getAuth().updateUser(uuid, {
+          disabled: true
+        })
+        res.json({'message': 'Account Disabled'});
+      });
+    });
