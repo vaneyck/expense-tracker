@@ -114,8 +114,8 @@ async function doStuff(req, res) {
 
   let transactionChart = Object.assign({}, singleGraph);
   transactionChart.title = "Transaction Charges"
-  transactionChart.chart_type = "VERTICAL_BAR_CHART";
-  transactionChart.x = ["Charges",];
+  transactionChart.chart_type = "SINGLE_VALUE";
+  transactionChart.x = ["Transaction Charges",];
   transactionChart.y = [totalTransactonCharges];
 
   let dailyFrequencyChart = Object.assign({}, singleGraph);
@@ -130,7 +130,7 @@ async function doStuff(req, res) {
   transactionChargesChart.x = Array.from(transactionChargesFrequency.keys());
   transactionChargesChart.y = Array.from(transactionChargesFrequency.values());
 
-  res.json([dailyUsageChart, transactionChargesChart, transactionChart, totalUsageChart, dailyFrequencyChart]);
+  res.json([transactionChart, dailyUsageChart, transactionChargesChart, totalUsageChart, dailyFrequencyChart]);
 }
 
 exports.getStatistics = onRequest(
